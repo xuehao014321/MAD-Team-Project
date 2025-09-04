@@ -1,0 +1,58 @@
+Username,Password,Credit,Item,Type,Distance,Status,Description,Like,Favor,Gmail,Gender,ProfilePic
+Alice,abc123,105,Drill,Lend,500m,Available,3 days RM50 deposit,100,80,alice@gmail.com,Female,female_1
+Bob,xyz456,100,Ladder,Borrow,1km,Completed,For festival setup,55,40,bob@gmail.com,Male,male_1
+Carol,qwe789,95,Fan,Lend,300m,Available,Standing fan quiet mode,10,2,carol@gmail.com,Female,female_2
+David,pass123,120,Hammer,Lend,200m,Available,Heavy duty construction hammer,25,15,david@gmail.com,Male,male_2
+Emma,secure456,90,Screwdriver Set,Borrow,800m,Completed,Complete set 20 pieces,30,20,emma@gmail.com,Female,female_3
+Frank,mykey789,110,Lawn Mower,Lend,1.2km,Available,Electric mower good condition,45,35,frank@gmail.com,Male,male_2
+Grace,hello123,85,Pressure Washer,Borrow,600m,Completed,High pressure cleaning,15,8,grace@gmail.com,Female,female_3
+Henry,world456,130,Circular Saw,Lend,400m,Available,Professional grade saw,60,50,henry@gmail.com,Male,male_4
+Ivy,test789,75,Extension Cord,Borrow,150m,Completed,50ft heavy duty cord,5,3,ivy@gmail.com,Female,female_5
+Jack,user123,140,Generator,Lend,2km,Available,Portable 2000W generator,80,70,jack@gmail.com,Male,male_1
+Kate,login456,95,Drill Bits,Borrow,300m,Completed,Assorted drill bit set,20,12,kate@gmail.com,Female,female_2
+Liam,admin789,115,Level,Lend,250m,Available,Digital laser level,35,25,liam@gmail.com,Male,male_3
+Maya,guest123,100,Stud Finder,Borrow,500m,Completed,Electronic wall scanner,18,10,maya@gmail.com,Female,female_4
+Noah,root456,125,Chainsaw,Lend,1.5km,Available,Gas powered chainsaw,70,60,noah@gmail.com,Male,male_5
+Olivia,pass789,80,Measuring Tape,Borrow,100m,Completed,25ft retractable tape,8,5,olivia@gmail.com,Female,female_1
+Paul,code123,135,Air Compressor,Lend,800m,Available,20 gallon tank compressor,55,45,paul@gmail.com,Male,male_2
+Quinn,data456,90,Router,Borrow,400m,Completed,Woodworking router,25,18,quinn@gmail.com,Male,male_3
+Rachel,info789,110,Clamp Set,Lend,200m,Available,12 piece bar clamp set,40,30,rachel@gmail.com,Female,female_4
+Sam,test123,105,Grinder,Borrow,600m,Completed,Angle grinder with discs,30,22,sam@gmail.com,Male,male_5
+Tina,user456,120,Table Saw,Lend,1km,Available,10 inch contractor saw,65,55,tina@gmail.com,Male,male_1
+Uma,pass789,85,Plane,Borrow,350m,Completed,Hand plane for woodworking,12,7,uma@gmail.com,Male,male_2
+Victor,key123,145,Jackhammer,Lend,2.5km,Available,Demolition jackhammer,90,80,victor@gmail.com,Male,male_3
+Wendy,lock456,95,Chisel Set,Borrow,200m,Completed,8 piece wood chisel set,22,15,wendy@gmail.com,Female,female_4
+Xavier,door789,130,Impact Driver,Lend,450m,Available,Cordless impact driver,50,40,xavier@gmail.com,Male,male_5
+Yara,open123,100,Square,Borrow,150m,Completed,Framing square,15,9,yara@gmail.com,Female,female_1
+Zoe,close456,115,Mallet,Lend,300m,Available,Rubber mallet,28,20,zoe@gmail.com,Female,female_2
+Alex,start789,125,Router Table,Borrow,800m,Completed,Router table with fence,45,35,alex@gmail.com,Male,male_3
+Beth,stop123,90,File Set,Lend,250m,Available,12 piece file set,20,14,beth@gmail.com,Female,female_4
+Chris,go456,140,Planer,Lend,1.2km,Available,Thickness planer,75,65,chris@gmail.com,Male,male_5
+Dana,run789,85,Countersink,Borrow,400m,Completed,Countersink bit set,10,6,dana@gmail.com,Female,female_1
+Eric,walk123,110,Clamps,Lend,300m,Available,Spring clamps pack of 10,35,25,eric@gmail.com,Male,male_2
+Fiona,jump456,105,Square,Borrow,200m,Completed,Combination square,18,12,fiona@gmail.com,Female,female_3
+Gary,fly789,135,Miter Saw,Lend,900m,Available,Compound miter saw,60,50,gary@gmail.com,Male,male_4
+Helen,swim123,95,Glue Gun,Borrow,150m,Completed,Hot glue gun,12,8,helen@gmail.com,Female,female_5
+Ian,dive456,120,Clamps,Lend,400m,Available,Quick grip clamps,42,32,ian@gmail.com,Male,male_1
+Jill,climb789,100,Level,Borrow,300m,Completed,Spirit level,16,11,jill@gmail.com,Female,female_2
+Kevin,fall123,145,Table Saw,Lend,1.5km,Available,Cabinet table saw,85,75,kevin@gmail.com,Male,male_3
+Lisa,rise456,90,Chisel,Borrow,250m,Completed,Bench chisel,14,9,lisa@gmail.com,Female,female_4
+Mike,set789,130,Router,Lend,600m,Available,Plunge router,55,45,mike@gmail.com,Male,male_5
+Nancy,get123,105,Square,Borrow,200m,Completed,Try square,20,13,nancy@gmail.com,Female,female_1
+Oscar,put456,115,Mallet,Lend,350m,Available,Dead blow mallet,32,24,oscar@gmail.com,Male,male_2
+Penny,take789,125,Drill Press,Borrow,1km,Completed,Bench drill press,50,40,penny@gmail.com,Female,female_3
+Quincy,give123,140,Planer,Lend,1.3km,Available,Hand planer,70,60,quincy@gmail.com,Male,male_4
+Rita,make456,95,File,Lend,200m,Available,Flat file,18,12,rita@gmail.com,Female,female_5
+Steve,do789,110,Countersink,Borrow,400m,Completed,Countersink drill bit,25,17,steve@gmail.com,Male,male_1
+Tara,have123,135,Clamps,Lend,500m,Available,Corner clamps,48,38,tara@gmail.com,Female,female_2
+Ugo,be456,100,Square,Borrow,300m,Completed,Speed square,22,15,ugo@gmail.com,Male,male_3
+Vera,see789,120,Mallet,Lend,250m,Available,Wooden mallet,38,28,vera@gmail.com,Female,female_4
+Will,look123,145,Miter Box,Borrow,800m,Completed,Miter box with saw,65,55,will@gmail.com,Male,male_5
+Xara,find456,90,Chisel,Lend,200m,Available,Mortise chisel,16,10,xara@gmail.com,Female,female_1
+Yuki,use789,130,Router,Lend,700m,Available,Trim router,52,42,yuki@gmail.com,Female,female_2
+Zack,work123,105,Level,Borrow,350m,Completed,Torpedo level,24,16,zack@gmail.com,Male,male_3
+Adam,play456,115,Clamps,Lend,300m,Available,Hand screw clamps,30,22,adam@gmail.com,Male,male_4
+Bella,read789,125,Square,Borrow,400m,Completed,Engineer square,28,20,bella@gmail.com,Female,female_5
+Carl,write123,140,Mallet,Lend,450m,Available,Dead blow hammer,45,35,carl@gmail.com,Male,male_1
+Dora,speak456,95,File,Borrow,250m,Completed,Round file,14,9,dora@gmail.com,Female,female_2
+Evan,listen789,110,Countersink,Lend,350m,Available,Countersink set,26,18,evan@gmail.com,Male,male_3

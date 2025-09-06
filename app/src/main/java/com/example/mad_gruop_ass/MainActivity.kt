@@ -2,13 +2,17 @@ package com.example.mad_gruop_ass
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     
@@ -17,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val itemList = mutableListOf<ItemModel>()
     
     private lateinit var fabAdd: ImageView
+    private val apiClient = ApiClient()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,21 +72,51 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun loadSampleData() {
-        try {
-            // 从CSV文件读取数据
-            val allItems = CsvReader.readItemsWithUsers(this)
-            
-            if (allItems.isNotEmpty()) {
-                // 添加所有卡片
-                itemList.addAll(allItems)
-                itemAdapter.notifyDataSetChanged()
-            } else {
-                // 如果CSV读取失败，使用备用测试数据
+        // 首先尝试从API加载数据
+        loadDataFromApi()
+    }
+    
+    private fun loadDataFromApi() {
+        lifecycleScope.launch {
+            try {
+                // 测试连接
+                val isConnected = apiClient.testConnection()
+                if (isConnected) {
+                    Log.d("MainActivity", "API连接成功，正在加载数据...")
+                    Toast.makeText(this@MainActivity, "API连接成功", Toast.LENGTH_SHORT).show()
+                    
+                    // 同时加载商品数据和用户数据
+                    val apiItems = apiClient.getItems()
+                    val apiUsers = apiClient.getUsers()
+                    
+                    if (apiItems.isNotEmpty()) {
+                        // 创建用户ID到用户名的映射
+                        val userMap = apiUsers.associate { it.userId to it.username }
+                        
+                        // 为每个商品添加用户名
+                        val itemsWithUsernames = apiItems.map { item ->
+                            item.copy(username = userMap[item.userId] ?: "未知用户")
+                        }
+                        
+                        itemList.clear()
+                        itemList.addAll(itemsWithUsernames)
+                        itemAdapter.notifyDataSetChanged()
+                        Log.d("MainActivity", "从API加载了 ${itemsWithUsernames.size} 个商品")
+                        Toast.makeText(this@MainActivity, "加载了 ${itemsWithUsernames.size} 个商品", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.d("MainActivity", "API返回空数据，使用备用数据")
+                        loadFallbackData()
+                    }
+                } else {
+                    Log.w("MainActivity", "API连接失败，使用备用数据")
+                    Toast.makeText(this@MainActivity, "API连接失败，使用本地数据", Toast.LENGTH_SHORT).show()
+                    loadFallbackData()
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "加载数据时出错", e)
+                Toast.makeText(this@MainActivity, "加载数据失败: ${e.message}", Toast.LENGTH_SHORT).show()
                 loadFallbackData()
             }
-        } catch (e: Exception) {
-            // 出错时使用备用数据
-            loadFallbackData()
         }
     }
     

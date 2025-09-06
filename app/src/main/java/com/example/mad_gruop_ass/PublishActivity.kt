@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -13,9 +14,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
 
 class PublishActivity : AppCompatActivity() {
     
@@ -32,6 +35,9 @@ class PublishActivity : AppCompatActivity() {
     private lateinit var selectedPhoto: ImageView
     private lateinit var removePhotoBtn: ImageView
     private var selectedImageUri: Uri? = null
+    
+    // API client
+    private val apiClient = ApiClient()
     
     // Permission and image picker
     private val imagePickerLauncher = registerForActivityResult(
@@ -230,13 +236,53 @@ class PublishActivity : AppCompatActivity() {
         
         if (hasError) return
         
-        // TODO: Implement actual publish logic
-        // 1. Upload image to server
-        // 2. Save item information to database
-        // 3. Update list data
-        
-        Toast.makeText(this, "Item published successfully!", Toast.LENGTH_SHORT).show()
-        finish()
+        // 发布商品到API
+        publishItemToApi(title, description, price)
+    }
+    
+    private fun publishItemToApi(title: String, description: String, price: String) {
+        lifecycleScope.launch {
+            try {
+                // 创建商品对象
+                val newItem = ItemModel(
+                    itemId = 0, // 新商品ID为0，服务器会自动分配
+                    userId = 1, // 临时用户ID，实际应用中应该从登录状态获取
+                    title = title,
+                    description = description,
+                    price = price,
+                    imageUrl = selectedImageUri?.toString() ?: "https://picsum.photos/200?random",
+                    status = "Available",
+                    views = 0,
+                    likes = 0,
+                    distance = "0 km",
+                    createdAt = "",
+                    username = "当前用户"
+                )
+                
+                // 显示加载状态
+                publishButton.isEnabled = false
+                publishButton.text = "发布中..."
+                
+                // 调用API创建商品
+                val success = apiClient.createItem(newItem)
+                
+                if (success) {
+                    Log.d("PublishActivity", "商品发布成功")
+                    Toast.makeText(this@PublishActivity, "商品发布成功！", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Log.e("PublishActivity", "商品发布失败")
+                    Toast.makeText(this@PublishActivity, "发布失败，请重试", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("PublishActivity", "发布商品时出错", e)
+                Toast.makeText(this@PublishActivity, "发布失败: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                // 恢复按钮状态
+                publishButton.isEnabled = true
+                publishButton.text = "发布"
+            }
+        }
     }
 }
 

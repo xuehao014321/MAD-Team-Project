@@ -2,23 +2,21 @@ package com.example.mad_gruop_ass
 
 /**
  * 商品数据模型
- * TODO: 后续需要从Excel表格中读取数据并替换hardcoded数据
+ * 从CSV文件中读取数据 - 严格按照实际CSV字段结构
  */
 data class ItemModel(
-    val id: Int,
-    val title: String,
-    val price: String,
-    val distance: String,
-    val owner: String,
-    val likes: Int,
-    
-    // 图片相关字段 - Excel表格照片链接对应
-    val imageRes: Int,  // 当前使用本地资源ID，临时占位用
-    val imageUrl: String? = null,  // Excel表格中的照片链接字段，用于网络图片加载
-    // 注意：imageUrl将从Excel中的"照片链接"列获取，格式应为完整的URL地址
-    // 例如：https://example.com/images/product1.jpg
-    
-    val type: String,
+    val itemId: Int,         // item_id
+    val userId: Int,         // user_id
+    val title: String,       // title
+    val description: String, // description
+    val price: String,       // price
+    val imageUrl: String,    // image_url
+    val status: String,      // status
+    val views: Int,          // views
+    val likes: Int,          // likes
+    val distance: String,    // distance
+    val createdAt: String,   // created_at
+    val username: String = "", // 从用户数据中关联获取
     var isLiked: Boolean = false,
     var isFavorite: Boolean = false
 ) 

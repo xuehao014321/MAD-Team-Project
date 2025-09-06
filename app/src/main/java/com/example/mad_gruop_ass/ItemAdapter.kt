@@ -8,6 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.cardview.widget.CardView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.io.File
 
 class ItemAdapter(
     private val items: List<ItemModel>,
@@ -18,6 +22,7 @@ class ItemAdapter(
         val cardView: CardView = itemView.findViewById(R.id.cardView)
         val itemImage: ImageView = itemView.findViewById(R.id.itemImage)
         val titleText: TextView = itemView.findViewById(R.id.titleText)
+        val descriptionText: TextView = itemView.findViewById(R.id.descriptionText)
         val priceText: TextView = itemView.findViewById(R.id.priceText)
         val distanceText: TextView = itemView.findViewById(R.id.distanceText)
         val ownerText: TextView = itemView.findViewById(R.id.ownerText)
@@ -46,27 +51,64 @@ class ItemAdapter(
         
         // Bind data
         holder.titleText.text = item.title
-        holder.priceText.text = item.price
+        holder.descriptionText.text = item.description
+        holder.priceText.text = "RM${item.price}"
         holder.distanceText.text = item.distance
-        holder.ownerText.text = item.owner
+        holder.ownerText.text = item.username
         holder.likesText.text = item.likes.toString()
         
-        // 图片加载处理 - Excel照片链接对应
-        // TODO: 替换为从Excel表格照片链接加载图片
-        // 当前使用本地资源作为占位符
-        if (!item.imageUrl.isNullOrEmpty()) {
-            // 如果有Excel中的照片链接，使用网络图片加载库(如Glide或Picasso)
-            // 示例：Glide.with(holder.itemView.context)
-            //          .load(item.imageUrl)
-            //          .placeholder(item.imageRes)
-            //          .error(R.drawable.default_image)
-            //          .into(holder.itemImage)
-            
-            // 当前临时使用本地资源
-            holder.itemImage.setImageResource(item.imageRes)
-        } else {
-            // 如果没有Excel照片链接，使用默认图片
-            holder.itemImage.setImageResource(item.imageRes)
+        // 智能图片加载：支持网络URL和本地文件路径
+        when {
+            item.imageUrl.startsWith("http://") || item.imageUrl.startsWith("https://") -> {
+                // 网络图片
+                Glide.with(holder.itemView.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.default_image)
+                    .error(R.drawable.default_image)
+                    .transform(CenterCrop(), RoundedCorners(16))
+                    .into(holder.itemImage)
+            }
+            item.imageUrl.startsWith("file://") || item.imageUrl.startsWith("/") -> {
+                // 本地文件路径
+                val file = if (item.imageUrl.startsWith("file://")) {
+                    File(item.imageUrl.substring(7))
+                } else {
+                    File(item.imageUrl)
+                }
+                
+                if (file.exists()) {
+                    Glide.with(holder.itemView.context)
+                        .load(file)
+                        .placeholder(R.drawable.default_image)
+                        .error(R.drawable.default_image)
+                        .transform(CenterCrop(), RoundedCorners(16))
+                        .into(holder.itemImage)
+                } else {
+                    holder.itemImage.setImageResource(R.drawable.default_image)
+                }
+            }
+            item.imageUrl.isNotEmpty() -> {
+                // 尝试作为资源ID加载
+                try {
+                    val resourceId = item.imageUrl.toIntOrNull()
+                    if (resourceId != null) {
+                        Glide.with(holder.itemView.context)
+                            .load(resourceId)
+                            .placeholder(R.drawable.default_image)
+                            .error(R.drawable.default_image)
+                            .transform(CenterCrop(), RoundedCorners(16))
+                            .into(holder.itemImage)
+                    } else {
+                        holder.itemImage.setImageResource(R.drawable.default_image)
+                    }
+                } catch (e: Exception) {
+                    holder.itemImage.setImageResource(R.drawable.default_image)
+                }
+            }
+            else -> {
+                // 默认图片
+                holder.itemImage.setImageResource(R.drawable.default_image)
+            }
         }
         
         // Set click listener

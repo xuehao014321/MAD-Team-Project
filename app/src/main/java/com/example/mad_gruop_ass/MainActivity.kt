@@ -67,102 +67,98 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun loadSampleData() {
-        // TODO: 替换为从Excel表格读取数据
-        // Excel表格应包含以下列：
-        // - 商品标题 (title)
-        // - 价格 (price) 
-        // - 距离 (distance)
-        // - 拥有者 (owner)
-        // - 点赞数 (likes)
-        // - 照片链接 (imageUrl) - 完整的URL地址
-        // - 商品类型 (type)
-        
-        // 示例硬编码数据 - 正式使用时需要替换
+        try {
+            // 从CSV文件读取数据
+            val allItems = CsvReader.readItemsWithUsers(this)
+            
+            if (allItems.isNotEmpty()) {
+                // 添加所有卡片
+                itemList.addAll(allItems)
+                itemAdapter.notifyDataSetChanged()
+            } else {
+                // 如果CSV读取失败，使用备用测试数据
+                loadFallbackData()
+            }
+        } catch (e: Exception) {
+            // 出错时使用备用数据
+            loadFallbackData()
+        }
+    }
+    
+    private fun loadFallbackData() {
+        // 备用测试数据 - 展示多种图片类型
         itemList.addAll(listOf(
             ItemModel(
-                id = 1,
-                title = "Jersey Jersey Jersey Jersey Jersey Jersey",
-                price = "RM20",
-                distance = "500m",
-                owner = "little bird",
-                likes = 11,
-                imageRes = R.drawable.default_image,
-                imageUrl = null, // TODO: 从Excel表格"照片链接"列获取，如："https://example.com/images/jersey1.jpg"
-                type = "Sports"
+                itemId = 1,
+                userId = 1,
+                title = "篮球",
+                description = "专业篮球，适合室内外使用",
+                price = "50",
+                imageUrl = "https://picsum.photos/200?1",
+                status = "Available",
+                views = 120,
+                likes = 15,
+                distance = "2.5 km",
+                createdAt = "2025-09-02 09:00:00",
+                username = "测试用户1"
             ),
             ItemModel(
-                id = 2,
-                title = "vacuum cleaner vacuum cleaner vacuum cleaner",
-                price = "RM20",
-                distance = "500m", 
-                owner = "big bird",
-                likes = 100,
-                imageRes = R.drawable.default_image,
-                imageUrl = null, // TODO: 从Excel表格"照片链接"列获取
-                type = "Appliance"
+                itemId = 2,
+                userId = 2,
+                title = "吉他",
+                description = "古典吉他，音质优美",
+                price = "200",
+                imageUrl = "https://picsum.photos/200?2",
+                status = "Available",
+                views = 85,
+                likes = 23,
+                distance = "1.8 km",
+                createdAt = "2025-09-02 10:30:00",
+                username = "测试用户2"
             ),
             ItemModel(
-                id = 3,
-                title = "refrigerator refrigerator refrigerator refrig",
-                price = "RM20",
-                distance = "500m",
-                owner = "big bird", 
-                likes = 30,
-                imageRes = R.drawable.default_image,
-                type = "Appliance"
-            ),
-            ItemModel(
-                id = 4,
-                title = "TVTVTVTVTVTVTVTVTVTVTVTVTVTVTV",
-                price = "RM20",
-                distance = "500m",
-                owner = "little dog",
-                likes = 20,
-                imageRes = R.drawable.default_image,
-                type = "Electronics"
-            ),
-            ItemModel(
-                id = 5,
-                title = "Kitchen Mixer Blender",
-                price = "RM15",
-                distance = "300m",
-                owner = "cat lover",
+                itemId = 3,
+                userId = 3,
+                title = "跑步机",
+                description = "家用跑步机，功能齐全",
+                price = "800",
+                imageUrl = "https://picsum.photos/200?3",
+                status = "Available",
+                views = 200,
                 likes = 45,
-                imageRes = R.drawable.default_image,
-                type = "Kitchen"
+                distance = "3.2 km",
+                createdAt = "2025-09-02 11:15:00",
+                username = "测试用户3"
             ),
             ItemModel(
-                id = 6,
-                title = "Gaming Chair Comfortable",
-                price = "RM25",
-                distance = "800m",
-                owner = "gamer123",
-                likes = 67,
-                imageRes = R.drawable.default_image,
-                type = "Furniture"
+                itemId = 4,
+                userId = 4,
+                title = "耳机",
+                description = "无线蓝牙耳机，降噪功能",
+                price = "150",
+                imageUrl = "https://picsum.photos/200?4",
+                status = "Available",
+                views = 95,
+                likes = 18,
+                distance = "1.5 km",
+                createdAt = "2025-09-02 12:00:00",
+                username = "测试用户4"
             ),
             ItemModel(
-                id = 7,
-                title = "Electric Drill Tool",
-                price = "RM18",
-                distance = "400m",
-                owner = "tool master",
-                likes = 25,
-                imageRes = R.drawable.default_image,
-                type = "Tools"
-            ),
-            ItemModel(
-                id = 8,
-                title = "Cooking Pot Large",
-                price = "RM12",
-                distance = "200m",
-                owner = "chef cook",
-                likes = 35,
-                imageRes = R.drawable.default_image,
-                type = "Kitchen"
+                itemId = 5,
+                userId = 5,
+                title = "书籍套装",
+                description = "编程学习书籍，适合初学者",
+                price = "80",
+                imageUrl = "https://picsum.photos/200?5",
+                status = "Available",
+                views = 60,
+                likes = 12,
+                distance = "2.0 km",
+                createdAt = "2025-09-02 13:45:00",
+                username = "测试用户5"
             )
         ))
-        
         itemAdapter.notifyDataSetChanged()
     }
     

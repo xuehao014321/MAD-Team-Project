@@ -51,6 +51,9 @@ dependencies {
     // Material Design Components
     implementation("com.google.android.material:material:1.10.0")
     
+    // Image loading library
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

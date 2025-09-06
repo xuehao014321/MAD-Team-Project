@@ -10,22 +10,10 @@ import java.net.URL
 
 class ApiClient {
     companion object {
-        // 根据你的网络配置，选择正确的IP地址
-        // 以太网: 192.168.0.119 (主要网络)
-        // VMware: 192.168.56.1 (虚拟机网络)
         private const val BASE_URL = "http://192.168.56.1:5000"
         private const val TAG = "ApiClient"
-        
-        // 备用IP地址列表，如果主IP失败可以尝试
-        private val FALLBACK_IPS = listOf(
-            "192.168.56.1",    // VMware网络
-            "192.168.0.119",   // 以太网
-            "192.168.159.1",   // VMnet1
-            "192.168.184.1"    // VMnet8
-        )
     }
 
-    // 获取所有用户
     suspend fun getUsers(): List<UserModel> = withContext(Dispatchers.IO) {
         try {
             val response = makeRequest("$BASE_URL/api/users", "GET")
@@ -40,7 +28,6 @@ class ApiClient {
         }
     }
 
-    // 获取所有商品
     suspend fun getItems(): List<ItemModel> = withContext(Dispatchers.IO) {
         try {
             val response = makeRequest("$BASE_URL/api/items", "GET")
@@ -55,16 +42,18 @@ class ApiClient {
         }
     }
 
-    // 创建新商品
     suspend fun createItem(item: ItemModel): Boolean = withContext(Dispatchers.IO) {
         try {
             val itemJson = JSONObject().apply {
                 put("title", item.title)
                 put("description", item.description)
                 put("price", item.price)
-                put("imageUrl", item.imageUrl)
+                put("image_url", item.imageUrl)
                 put("status", item.status)
-                put("userId", item.userId)
+                put("user_id", item.userId)
+                put("views", item.views)
+                put("likes", item.likes)
+                put("distance", item.distance)
             }
             
             val response = makeRequest("$BASE_URL/api/items", "POST", itemJson.toString())
@@ -75,37 +64,68 @@ class ApiClient {
         }
     }
 
-    // 更新商品
-    suspend fun updateItem(item: ItemModel): Boolean = withContext(Dispatchers.IO) {
+    suspend fun uploadImage(imageUri: android.net.Uri, context: android.content.Context): String? = withContext(Dispatchers.IO) {
         try {
-            val itemJson = JSONObject().apply {
-                put("title", item.title)
-                put("description", item.description)
-                put("price", item.price)
-                put("imageUrl", item.imageUrl)
-                put("status", item.status)
+            val url = URL("$BASE_URL/api/upload")
+            val connection = url.openConnection() as HttpURLConnection
+            
+            connection.requestMethod = "POST"
+            connection.doOutput = true
+            connection.doInput = true
+            connection.connectTimeout = 30000
+            connection.readTimeout = 30000
+            
+            val boundary = "----WebKitFormBoundary${System.currentTimeMillis()}"
+            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+            
+            val inputStream = context.contentResolver.openInputStream(imageUri)
+            if (inputStream == null) {
+                return@withContext null
             }
             
-            val response = makeRequest("$BASE_URL/api/items/${item.itemId}", "PUT", itemJson.toString())
-            response != null
+            val outputStream = connection.outputStream
+            val writer = outputStream.bufferedWriter()
+            
+            try {
+                writer.write("--$boundary\r\n")
+                writer.write("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n")
+                writer.write("Content-Type: image/jpeg\r\n\r\n")
+                writer.flush()
+                
+                val buffer = ByteArray(8192)
+                var bytesRead: Int
+                
+                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                    outputStream.write(buffer, 0, bytesRead)
+                }
+                
+                writer.write("\r\n--$boundary--\r\n")
+                writer.flush()
+                
+            } finally {
+                writer.close()
+                inputStream.close()
+            }
+            
+            val responseCode = connection.responseCode
+            
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
+                val jsonResponse = org.json.JSONObject(responseBody)
+                if (jsonResponse.getBoolean("success")) {
+                    jsonResponse.getString("image_url")
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Error updating item", e)
-            false
+            Log.e(TAG, "Error uploading image", e)
+            null
         }
     }
 
-    // 删除商品
-    suspend fun deleteItem(itemId: Int): Boolean = withContext(Dispatchers.IO) {
-        try {
-            val response = makeRequest("$BASE_URL/api/items/$itemId", "DELETE")
-            response != null
-        } catch (e: Exception) {
-            Log.e(TAG, "Error deleting item", e)
-            false
-        }
-    }
-
-    // 测试连接
     suspend fun testConnection(): Boolean = withContext(Dispatchers.IO) {
         try {
             val response = makeRequest("$BASE_URL/api/test", "GET")
@@ -116,7 +136,6 @@ class ApiClient {
         }
     }
 
-    // 通用HTTP请求方法
     private suspend fun makeRequest(urlString: String, method: String, body: String? = null): String? = withContext(Dispatchers.IO) {
         try {
             val url = URL(urlString)
@@ -135,12 +154,10 @@ class ApiClient {
             }
             
             val responseCode = connection.responseCode
-            Log.d(TAG, "Request to $urlString - Response code: $responseCode")
             
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                 connection.inputStream.bufferedReader().use { it.readText() }
             } else {
-                Log.e(TAG, "HTTP Error: $responseCode")
                 null
             }
         } catch (e: Exception) {
@@ -149,7 +166,6 @@ class ApiClient {
         }
     }
 
-    // 解析用户数据
     private fun parseUsersFromJson(jsonString: String): List<UserModel> {
         try {
             val jsonArray = JSONArray(jsonString)
@@ -177,7 +193,6 @@ class ApiClient {
         }
     }
 
-    // 解析商品数据
     private fun parseItemsFromJson(jsonString: String): List<ItemModel> {
         try {
             val jsonArray = JSONArray(jsonString)
@@ -210,7 +225,6 @@ class ApiClient {
     }
 }
 
-// 用户数据模型
 data class UserModel(
     val userId: Int,
     val username: String,

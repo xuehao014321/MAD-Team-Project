@@ -4,13 +4,14 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -30,16 +31,13 @@ class PublishActivity : AppCompatActivity() {
     private lateinit var priceInput: TextInputEditText
     private lateinit var publishButton: MaterialButton
     
-    // Photo upload related
     private lateinit var uploadPlaceholder: LinearLayout
     private lateinit var selectedPhoto: ImageView
     private lateinit var removePhotoBtn: ImageView
     private var selectedImageUri: Uri? = null
     
-    // API client
     private val apiClient = ApiClient()
     
-    // Permission and image picker
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -57,7 +55,7 @@ class PublishActivity : AppCompatActivity() {
         if (isGranted) {
             openImagePicker()
         } else {
-            Toast.makeText(this, "Storage permission is required to upload photos", Toast.LENGTH_SHORT).show()
+            showPermissionDeniedDialog()
         }
     }
     
@@ -68,7 +66,6 @@ class PublishActivity : AppCompatActivity() {
         setupToolbar()
         setupViews()
         setupClickListeners()
-        setupTextWatchers()
     }
     
     private fun setupToolbar() {
@@ -93,7 +90,6 @@ class PublishActivity : AppCompatActivity() {
         priceInput = findViewById(R.id.priceInput)
         publishButton = findViewById(R.id.publishButton)
         
-        // Photo upload views
         uploadPlaceholder = findViewById(R.id.uploadPlaceholder)
         selectedPhoto = findViewById(R.id.selectedPhoto)
         removePhotoBtn = findViewById(R.id.removePhotoBtn)
@@ -104,7 +100,6 @@ class PublishActivity : AppCompatActivity() {
             handlePublish()
         }
         
-        // Photo upload click listeners
         uploadPlaceholder.setOnClickListener {
             checkPermissionAndPickImage()
         }
@@ -118,54 +113,61 @@ class PublishActivity : AppCompatActivity() {
         }
     }
     
-    private fun setupTextWatchers() {
-        // Title character counter
-        titleInput.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
-                val length = s?.length ?: 0
-                if (length > 50) {
-                    titleInputLayout.error = "Title must be 50 characters or less"
-                } else {
-                    titleInputLayout.error = null
-                }
-            }
-        })
-        
-        // Description character counter
-        descriptionInput.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
-                val length = s?.length ?: 0
-                if (length > 200) {
-                    descriptionInputLayout.error = "Description must be 200 characters or less"
-                } else {
-                    descriptionInputLayout.error = null
-                }
-            }
-        })
+    private fun getRequiredPermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     }
     
     private fun checkPermissionAndPickImage() {
+        val permission = getRequiredPermission()
+        
         when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
                 openImagePicker()
             }
+            shouldShowRequestPermissionRationale(permission) -> {
+                showPermissionRationaleDialog()
+            }
             else -> {
-                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                permissionLauncher.launch(permission)
             }
         }
     }
     
+    private fun showPermissionRationaleDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("需要相册权限")
+            .setMessage("为了上传商品图片，需要访问您的相册。请允许相册权限以继续。")
+            .setPositiveButton("允许") { _, _ ->
+                permissionLauncher.launch(getRequiredPermission())
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+    
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("权限被拒绝")
+            .setMessage("相册权限被拒绝，无法上传图片。")
+            .setPositiveButton("确定") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+    
     private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.type = "image/*"
-        imagePickerLauncher.launch(intent)
+        try {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            intent.type = "image/*"
+            imagePickerLauncher.launch(intent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "无法打开图片选择器: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
     
     private fun showSelectedPhoto(uri: Uri) {
@@ -188,7 +190,6 @@ class PublishActivity : AppCompatActivity() {
         val description = descriptionInput.text.toString().trim()
         val price = priceInput.text.toString().trim()
         
-        // Validation
         var hasError = false
         
         if (title.isEmpty()) {
@@ -236,55 +237,70 @@ class PublishActivity : AppCompatActivity() {
         
         if (hasError) return
         
-        // 发布商品到API
-        publishItemToApi(title, description, price)
+        publishItem(title, description, price)
     }
     
-    private fun publishItemToApi(title: String, description: String, price: String) {
+    private fun publishItem(title: String, description: String, price: String) {
         lifecycleScope.launch {
             try {
-                // 创建商品对象
-                val newItem = ItemModel(
-                    itemId = 0, // 新商品ID为0，服务器会自动分配
-                    userId = 1, // 临时用户ID，实际应用中应该从登录状态获取
-                    title = title,
-                    description = description,
-                    price = price,
-                    imageUrl = selectedImageUri?.toString() ?: "https://picsum.photos/200?random",
-                    status = "Available",
-                    views = 0,
-                    likes = 0,
-                    distance = "0 km",
-                    createdAt = "",
-                    username = "当前用户"
-                )
+                val connectionOk = apiClient.testConnection()
                 
-                // 显示加载状态
-                publishButton.isEnabled = false
-                publishButton.text = "发布中..."
-                
-                // 调用API创建商品
-                val success = apiClient.createItem(newItem)
-                
-                if (success) {
-                    Log.d("PublishActivity", "商品发布成功")
-                    Toast.makeText(this@PublishActivity, "商品发布成功！", Toast.LENGTH_SHORT).show()
-                    finish()
+                if (connectionOk) {
+                    var imageUrl: String? = null
+                    
+                    if (selectedImageUri != null) {
+                        publishButton.text = "上传图片中..."
+                        
+                        val uploadedImageUrl = apiClient.uploadImage(selectedImageUri!!, this@PublishActivity)
+                        if (uploadedImageUrl != null) {
+                            imageUrl = uploadedImageUrl
+                            Toast.makeText(this@PublishActivity, "图片上传成功！", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@PublishActivity, "图片上传失败，请重试", Toast.LENGTH_LONG).show()
+                            publishButton.text = "发布商品"
+                            return@launch
+                        }
+                    } else {
+                        imageUrl = "https://picsum.photos/200?random"
+                    }
+                    
+                    val finalImageUrl = imageUrl ?: "https://picsum.photos/200?random"
+                    
+                    val newItem = ItemModel(
+                        itemId = 0,
+                        userId = 1,
+                        title = title,
+                        description = description,
+                        price = price,
+                        imageUrl = finalImageUrl,
+                        status = "Available",
+                        views = 0,
+                        likes = 0,
+                        distance = "0 km",
+                        createdAt = "",
+                        username = "alice"
+                    )
+                    
+                    publishButton.isEnabled = false
+                    publishButton.text = "发布中..."
+                    
+                    val success = apiClient.createItem(newItem)
+                    
+                    if (success) {
+                        Toast.makeText(this@PublishActivity, "商品发布成功！", Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        Toast.makeText(this@PublishActivity, "发布失败，请重试", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Log.e("PublishActivity", "商品发布失败")
-                    Toast.makeText(this@PublishActivity, "发布失败，请重试", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PublishActivity, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Log.e("PublishActivity", "发布商品时出错", e)
                 Toast.makeText(this@PublishActivity, "发布失败: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
-                // 恢复按钮状态
                 publishButton.isEnabled = true
                 publishButton.text = "发布"
             }
         }
     }
 }
-
-
-

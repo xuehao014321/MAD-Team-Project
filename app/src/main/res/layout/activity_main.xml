@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:fitsSystemWindows="true">
+    android:background="@color/background_color">
 
     <!-- Top Bar -->
     <RelativeLayout
@@ -18,7 +17,6 @@
         android:background="@color/background_color"
         android:elevation="1dp">
 
-        <!-- App Logo -->
         <ImageView
             android:id="@+id/appLogo"
             android:layout_width="140dp"
@@ -29,7 +27,6 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true" />
 
-        <!-- Profile Icon -->
         <ImageView
             android:id="@+id/profileIcon"
             android:layout_width="36dp"
@@ -43,18 +40,16 @@
 
     </RelativeLayout>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Spacer for top bar -->
         <View
             android:layout_width="match_parent"
             android:layout_height="64dp" />
 
-        <!-- RecyclerView for Items -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -69,7 +64,7 @@
 
     </LinearLayout>
 
-    <!-- 底部导航栏 - 简约风格，只保留白色背景 -->
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -83,7 +78,7 @@
 
     </LinearLayout>
 
-    <!-- 浮动加号按钮 - 突出导航栏 -->
+    <!-- FAB -->
     <ImageView
         android:id="@+id/fabAdd"
         android:layout_width="56dp"

@@ -10,7 +10,7 @@ import java.net.URL
 
 class ApiClient {
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:5000"
+        private const val BASE_URL = "http://172.19.0.1:5000"
         private const val TAG = "ApiClient"
     }
 

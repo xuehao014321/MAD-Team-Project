@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
         setupFAB()
         loadData()
     }
+
+    override fun onResume() {
+        super.onResume()
+        // 返回首页时刷新，保证数据同步
+        refreshData()
+    }
     
     private fun setupRecyclerView() {
         recyclerView = findViewById(R.id.recyclerView)
@@ -80,6 +86,27 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, "加载数据失败: ${e.message}", Toast.LENGTH_SHORT).show()
                 loadFallbackData()
+            }
+        }
+    }
+
+    private fun refreshData() {
+        lifecycleScope.launch {
+            try {
+                val apiItems = apiClient.getItems()
+                val apiUsers = apiClient.getUsers()
+                val userMap = apiUsers.associate { it.userId to it.username }
+
+                itemList.clear()
+                if (apiItems.isNotEmpty()) {
+                    val itemsWithUsernames = apiItems.map { item ->
+                        item.copy(username = userMap[item.userId] ?: "未知用户")
+                    }
+                    itemList.addAll(itemsWithUsernames)
+                }
+                itemAdapter.notifyDataSetChanged()
+            } catch (_: Exception) {
+                // 静默失败，避免打扰用户
             }
         }
     }

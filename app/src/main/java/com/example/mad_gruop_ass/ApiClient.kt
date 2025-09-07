@@ -65,64 +65,79 @@ class ApiClient {
     }
 
     suspend fun uploadImage(imageUri: android.net.Uri, context: android.content.Context): String? = withContext(Dispatchers.IO) {
+        var connection: HttpURLConnection? = null
         try {
             val url = URL("$BASE_URL/api/upload")
-            val connection = url.openConnection() as HttpURLConnection
-            
+            connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "POST"
             connection.doOutput = true
             connection.doInput = true
+            connection.useCaches = false
             connection.connectTimeout = 30000
             connection.readTimeout = 30000
-            
-            val boundary = "----WebKitFormBoundary${System.currentTimeMillis()}"
+            val boundary = "----AndroidFormBoundary${System.currentTimeMillis()}"
             connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
-            
-            val inputStream = context.contentResolver.openInputStream(imageUri)
-            if (inputStream == null) {
+            connection.setRequestProperty("Accept", "application/json")
+
+            val mimeType = context.contentResolver.getType(imageUri) ?: "application/octet-stream"
+            val fileName = "image_${System.currentTimeMillis()}" + when (mimeType) {
+                "image/jpeg", "image/jpg" -> ".jpg"
+                "image/png" -> ".png"
+                "image/webp" -> ".webp"
+                else -> ".bin"
+            }
+
+            val twoHyphens = "--"
+            val lineEnd = "\r\n"
+
+            val output = java.io.DataOutputStream(connection.outputStream)
+            context.contentResolver.openInputStream(imageUri)?.use { input ->
+                // Header
+                output.writeBytes(twoHyphens + boundary + lineEnd)
+                output.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\"$fileName\"" + lineEnd)
+                output.writeBytes("Content-Type: $mimeType" + lineEnd)
+                output.writeBytes(lineEnd)
+
+                // File bytes
+                val buffer = ByteArray(1024 * 8)
+                var bytesRead: Int
+                while (input.read(buffer).also { bytesRead = it } != -1) {
+                    output.write(buffer, 0, bytesRead)
+                }
+                output.writeBytes(lineEnd)
+
+                // Footer
+                output.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd)
+                output.flush()
+            } ?: run {
                 return@withContext null
             }
-            
-            val outputStream = connection.outputStream
-            val writer = outputStream.bufferedWriter()
-            
-            try {
-                writer.write("--$boundary\r\n")
-                writer.write("Content-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\n")
-                writer.write("Content-Type: image/jpeg\r\n\r\n")
-                writer.flush()
-                
-                val buffer = ByteArray(8192)
-                var bytesRead: Int
-                
-                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                    outputStream.write(buffer, 0, bytesRead)
-                }
-                
-                writer.write("\r\n--$boundary--\r\n")
-                writer.flush()
-                
-            } finally {
-                writer.close()
-                inputStream.close()
-            }
-            
+
             val responseCode = connection.responseCode
-            
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val responseBody = connection.inputStream.bufferedReader().use { it.readText() }
-                val jsonResponse = org.json.JSONObject(responseBody)
-                if (jsonResponse.getBoolean("success")) {
-                    jsonResponse.getString("image_url")
+            val responseBody = try {
+                if (responseCode in 200..299) {
+                    connection.inputStream.bufferedReader().use { it.readText() }
                 } else {
-                    null
+                    connection.errorStream?.bufferedReader()?.use { it.readText() }
                 }
+            } catch (e: Exception) {
+                null
+            }
+
+            if (responseCode in 200..299 && responseBody != null) {
+                val jsonResponse = org.json.JSONObject(responseBody)
+                if (jsonResponse.optBoolean("success", false)) {
+                    jsonResponse.optString("image_url", null)
+                } else null
             } else {
+                Log.e(TAG, "Upload failed, code=$responseCode, body=$responseBody")
                 null
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error uploading image", e)
             null
+        } finally {
+            try { connection?.disconnect() } catch (_: Exception) {}
         }
     }
 

@@ -266,6 +266,11 @@ class PublishActivity : AppCompatActivity() {
                     
                     val finalImageUrl = imageUrl ?: "https://picsum.photos/200?random"
                     
+                    // 获取alice用户的distance信息
+                    val users = apiClient.getUsers()
+                    val aliceUser = users.find { it.username == "alice" }
+                    val aliceDistance = aliceUser?.distance?.toString() ?: "5"
+                    
                     val newItem = ItemModel(
                         itemId = 0,
                         userId = 1,
@@ -276,9 +281,9 @@ class PublishActivity : AppCompatActivity() {
                         status = "Available",
                         views = 0,
                         likes = 0,
-                        distance = "0 km",
+                        distance = aliceDistance,
                         createdAt = "",
-                        username = "alice"
+                        username = "当前用户"
                     )
                     
                     publishButton.isEnabled = false

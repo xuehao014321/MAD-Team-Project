@@ -3,6 +3,7 @@ const mysql = require('mysql2/promise');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
 require('dotenv').config();
 
 const app = express();
@@ -58,6 +59,20 @@ app.get('/api/items', async (req, res) => {
     }
 });
 
+// 创建物品（从客户端接收 JSON）
+app.post('/api/items', async (req, res) => {
+    try {
+        const { title, description, price, image_url, status, user_id, views, likes, distance } = req.body;
+        const [result] = await pool.query(
+            'INSERT INTO items (user_id, title, description, price, image_url, status, views, likes, distance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [user_id, title, description, price, image_url, status, views, likes, distance]
+        );
+        res.status(201).json({ success: true, item_id: result.insertId });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // 根据 user_id 查询用户的物品
 app.get('/api/users/:id/items', async (req, res) => {
     try {
@@ -78,12 +93,40 @@ app.get('/api/images', async (req, res) => {
     }
 });
 
+// 图片上传接口（表单字段名：image）
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded' });
+        }
+        const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        return res.json({ success: true, image_url: fileUrl });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 // ✅ 创建uploads目录（如果不存在）
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir);
     console.log('📁 创建uploads目录');
 }
+
+// 配置 multer 用于处理文件上传
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+        const timestamp = Date.now();
+        const originalName = file.originalname || 'image.jpg';
+        const ext = path.extname(originalName) || '.jpg';
+        cb(null, `${timestamp}${ext}`);
+    }
+});
+
+const upload = multer({ storage });
 
 // 启动服务器
 const PORT = process.env.PORT || 5000;

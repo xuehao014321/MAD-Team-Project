@@ -139,12 +139,12 @@ class PublishActivity : AppCompatActivity() {
     
     private fun showPermissionRationaleDialog() {
         AlertDialog.Builder(this)
-            .setTitle("需要相册权限")
-            .setMessage("为了上传商品图片，需要访问您的相册。请允许相册权限以继续。")
-            .setPositiveButton("允许") { _, _ ->
+            .setTitle("Photo Gallery Permission Required")
+            .setMessage("To upload item photos, we need access to your photo gallery. Please allow gallery permission to continue.")
+            .setPositiveButton("Allow") { _, _ ->
                 permissionLauncher.launch(getRequiredPermission())
             }
-            .setNegativeButton("取消") { dialog, _ ->
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
@@ -152,9 +152,9 @@ class PublishActivity : AppCompatActivity() {
     
     private fun showPermissionDeniedDialog() {
         AlertDialog.Builder(this)
-            .setTitle("权限被拒绝")
-            .setMessage("相册权限被拒绝，无法上传图片。")
-            .setPositiveButton("确定") { dialog, _ ->
+            .setTitle("Permission Denied")
+            .setMessage("Gallery permission was denied, unable to upload images.")
+            .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
@@ -166,7 +166,7 @@ class PublishActivity : AppCompatActivity() {
             intent.type = "image/*"
             imagePickerLauncher.launch(intent)
         } catch (e: Exception) {
-            Toast.makeText(this, "无法打开图片选择器: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Unable to open image picker: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -249,15 +249,15 @@ class PublishActivity : AppCompatActivity() {
                     var imageUrl: String? = null
                     
                     if (selectedImageUri != null) {
-                        publishButton.text = "上传图片中..."
+                        publishButton.text = "Uploading image..."
                         
                         val uploadedImageUrl = apiClient.uploadImage(selectedImageUri!!, this@PublishActivity)
                         if (uploadedImageUrl != null) {
                             imageUrl = uploadedImageUrl
-                            Toast.makeText(this@PublishActivity, "图片上传成功！", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PublishActivity, "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(this@PublishActivity, "图片上传失败，请重试", Toast.LENGTH_LONG).show()
-                            publishButton.text = "发布商品"
+                            Toast.makeText(this@PublishActivity, "Image upload failed, please try again", Toast.LENGTH_LONG).show()
+                            publishButton.text = "Publish Item"
                             return@launch
                         }
                     } else {
@@ -266,7 +266,7 @@ class PublishActivity : AppCompatActivity() {
                     
                     val finalImageUrl = imageUrl ?: "https://picsum.photos/200?random"
                     
-                    // 获取alice用户的distance信息
+                    // Get alice user's distance information
                     val users = apiClient.getUsers()
                     val aliceUser = users.find { it.username == "alice" }
                     val aliceDistance = aliceUser?.distance?.toString() ?: "5"
@@ -283,28 +283,28 @@ class PublishActivity : AppCompatActivity() {
                         likes = 0,
                         distance = aliceDistance,
                         createdAt = "",
-                        username = "当前用户"
+                        username = "Current User"
                     )
                     
                     publishButton.isEnabled = false
-                    publishButton.text = "发布中..."
+                    publishButton.text = "Publishing..."
                     
                     val success = apiClient.createItem(newItem)
                     
                     if (success) {
-                        Toast.makeText(this@PublishActivity, "商品发布成功！", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PublishActivity, "Item published successfully!", Toast.LENGTH_SHORT).show()
                         finish()
                     } else {
-                        Toast.makeText(this@PublishActivity, "发布失败，请重试", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PublishActivity, "Publishing failed, please try again", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@PublishActivity, "无法连接到服务器，请检查网络连接", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@PublishActivity, "Unable to connect to server, please check your network connection", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@PublishActivity, "发布失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PublishActivity, "Publishing failed: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
                 publishButton.isEnabled = true
-                publishButton.text = "发布"
+                publishButton.text = "Publish"
             }
         }
     }

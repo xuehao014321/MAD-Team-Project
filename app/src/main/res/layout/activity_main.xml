@@ -93,6 +93,6 @@
         android:scaleType="centerInside"
         android:tint="@color/white"
         android:elevation="16dp"
-        android:contentDescription="添加" />
+        android:contentDescription="Add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -151,6 +151,26 @@ class ApiClient {
         }
     }
 
+    suspend fun updateItemLikes(itemId: Int, likes: Int, isLiked: Boolean): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val updateJson = JSONObject().apply {
+                put("likes", likes)
+                put("is_liked", isLiked)
+            }
+            
+            val response = makeRequest("$BASE_URL/api/items/$itemId", "PATCH", updateJson.toString())
+            if (response != null) {
+                val jsonResponse = JSONObject(response)
+                jsonResponse.optBoolean("success", false)
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating item likes", e)
+            false
+        }
+    }
+
     private suspend fun makeRequest(urlString: String, method: String, body: String? = null): String? = withContext(Dispatchers.IO) {
         try {
             val url = URL(urlString)
@@ -225,6 +245,7 @@ class ApiClient {
                     status = itemJson.optString("status", "Available"),
                     views = itemJson.optInt("views", 0),
                     likes = itemJson.optInt("likes", 0),
+                    isLiked = itemJson.optBoolean("is_liked", false),
                     distance = itemJson.optString("distance", "0 km"),
                     createdAt = itemJson.optString("created_at", ""),
                     username = itemJson.optString("username", "未知用户")

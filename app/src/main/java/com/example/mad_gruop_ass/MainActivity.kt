@@ -69,22 +69,22 @@ class MainActivity : AppCompatActivity() {
                     if (apiItems.isNotEmpty()) {
                         val userMap = apiUsers.associate { it.userId to it.username }
                         val itemsWithUsernames = apiItems.map { item ->
-                            item.copy(username = userMap[item.userId] ?: "未知用户")
+                            item.copy(username = userMap[item.userId] ?: "Unknown User")
                         }
                         
                         itemList.clear()
                         itemList.addAll(itemsWithUsernames)
                         itemAdapter.notifyDataSetChanged()
-                        Toast.makeText(this@MainActivity, "加载了 ${itemsWithUsernames.size} 个商品", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Loaded ${itemsWithUsernames.size} items", Toast.LENGTH_SHORT).show()
                     } else {
                         loadFallbackData()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "API连接失败，使用本地数据", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "API connection failed, using local data", Toast.LENGTH_SHORT).show()
                     loadFallbackData()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@MainActivity, "加载数据失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Failed to load data: ${e.message}", Toast.LENGTH_SHORT).show()
                 loadFallbackData()
             }
         }
@@ -100,13 +100,13 @@ class MainActivity : AppCompatActivity() {
                 itemList.clear()
                 if (apiItems.isNotEmpty()) {
                     val itemsWithUsernames = apiItems.map { item ->
-                        item.copy(username = userMap[item.userId] ?: "未知用户")
+                        item.copy(username = userMap[item.userId] ?: "Unknown User")
                     }
                     itemList.addAll(itemsWithUsernames)
                 }
                 itemAdapter.notifyDataSetChanged()
             } catch (_: Exception) {
-                // 静默失败，避免打扰用户
+                // Silent failure to avoid disturbing user
             }
         }
     }
@@ -116,8 +116,8 @@ class MainActivity : AppCompatActivity() {
             ItemModel(
                 itemId = 1,
                 userId = 1,
-                title = "篮球",
-                description = "专业篮球，适合室内外使用",
+                title = "Basketball",
+                description = "Professional basketball, suitable for indoor and outdoor use",
                 price = "50",
                 imageUrl = "https://picsum.photos/200?1",
                 status = "Available",
@@ -125,13 +125,13 @@ class MainActivity : AppCompatActivity() {
                 likes = 15,
                 distance = "2.5 km",
                 createdAt = "2025-09-02 09:00:00",
-                username = "测试用户1"
+                username = "Test User 1"
             ),
             ItemModel(
                 itemId = 2,
                 userId = 2,
-                title = "吉他",
-                description = "古典吉他，音质优美",
+                title = "Guitar",
+                description = "Classical guitar with beautiful sound quality",
                 price = "200",
                 imageUrl = "https://picsum.photos/200?2",
                 status = "Available",
@@ -139,13 +139,13 @@ class MainActivity : AppCompatActivity() {
                 likes = 23,
                 distance = "1.8 km",
                 createdAt = "2025-09-02 10:30:00",
-                username = "测试用户2"
+                username = "Test User 2"
             ),
             ItemModel(
                 itemId = 3,
                 userId = 3,
-                title = "跑步机",
-                description = "家用跑步机，功能齐全",
+                title = "Treadmill",
+                description = "Home treadmill with complete functions",
                 price = "800",
                 imageUrl = "https://picsum.photos/200?3",
                 status = "Available",
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                 likes = 45,
                 distance = "3.2 km",
                 createdAt = "2025-09-02 11:15:00",
-                username = "测试用户3"
+                username = "Test User 3"
             )
         ))
         itemAdapter.notifyDataSetChanged()

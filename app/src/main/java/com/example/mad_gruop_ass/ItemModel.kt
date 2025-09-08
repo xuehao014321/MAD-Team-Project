@@ -10,6 +10,7 @@ data class ItemModel(
     val status: String,
     val views: Int,
     val likes: Int,
+    val isLiked: Boolean = false,
     val distance: String,
     val createdAt: String,
     val username: String = ""

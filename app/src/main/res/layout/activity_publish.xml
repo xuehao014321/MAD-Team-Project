@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 发布商品页面 - 用户填写商品信息并发布到平台 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Toolbar -->
+        <!-- 顶部工具栏 -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -20,14 +21,14 @@
             app:titleTextColor="@color/black"
             app:navigationIcon="?attr/homeAsUpIndicator" />
 
-        <!-- Content Area -->
+        <!-- 主要内容区域 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Photo Upload Area -->
+            <!-- 商品图片上传区域 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/photoUploadCard"
                 android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!-- Default upload area -->
+                    <!-- 默认上传提示区域 - 点击选择图片 -->
                     <LinearLayout
                         android:id="@+id/uploadPlaceholder"
                         android:layout_width="match_parent"
@@ -68,7 +69,7 @@
 
                     </LinearLayout>
 
-                    <!-- Selected photo display -->
+                    <!-- 已选择的图片显示区域 -->
                     <ImageView
                         android:id="@+id/selectedPhoto"
                         android:layout_width="match_parent"
@@ -79,7 +80,7 @@
                         android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground" />
 
-                    <!-- Remove photo button -->
+                    <!-- 删除图片按钮 -->
                     <ImageView
                         android:id="@+id/removePhotoBtn"
                         android:layout_width="32dp"
@@ -98,7 +99,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Item Title -->
+            <!-- 商品标题输入框 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/titleInputLayout"
                 android:layout_width="match_parent"
@@ -122,7 +123,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Item Description -->
+            <!-- 商品描述输入框 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/descriptionInputLayout"
                 android:layout_width="match_parent"
@@ -148,7 +149,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Item Price -->
+            <!-- 商品价格输入框 -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,7 +171,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Publish Button -->
+            <!-- 发布按钮 - 发布时商品距离将根据当前登录用户的位置自动计算 -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/publishButton"
                 android:layout_width="match_parent"

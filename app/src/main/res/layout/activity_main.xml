@@ -27,6 +27,7 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true" />
 
+        <!-- 用户头像图标 - 登录前显示默认用户图标，登录成功后切换为用户头像，点击进入用户信息页面 -->
         <ImageView
             android:id="@+id/profileIcon"
             android:layout_width="36dp"
@@ -41,6 +42,8 @@
     </RelativeLayout>
 
     <!-- Main Content -->
+
+    <!-- Bottom Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,21 +53,20 @@
             android:layout_width="match_parent"
             android:layout_height="64dp" />
 
+        <!-- 商品卡片列表 - 显示所有商品卡片，每个卡片可点击查看详情 -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
             android:paddingHorizontal="8dp"
             android:paddingVertical="8dp"
             android:paddingBottom="50dp"
-            android:clipToPadding="false"
-            android:scrollbars="none"
-            android:overScrollMode="never" />
+            android:scrollbars="none" />
 
     </LinearLayout>
 
-    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -82,17 +84,19 @@
     <ImageView
         android:id="@+id/fabAdd"
         android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="2dp"
-        android:src="@drawable/ic_add"
         android:background="@drawable/fab_background"
-        android:padding="16dp"
         android:clickable="true"
-        android:focusable="true"
-        android:scaleType="centerInside"
-        android:tint="@color/white"
+        android:contentDescription="Add"
         android:elevation="16dp"
-        android:contentDescription="Add" />
+        android:focusable="true"
+        android:padding="16dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_add"
+        android:tint="@color/white"
+        app:layout_anchor="@+id/bottomNavigation"
+        app:layout_anchorGravity="top|center" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,126 +2,173 @@ package com.example.assignment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ProgressBar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private ImageView creditInfoIconMain;
-    private TextView mainUserName;
-    private TextView mainUserEmail;
-    private String currentUser = ""; // 添加当前用户变量
-    private CSVFileManager csvManager;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private Button registerButton;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        
-        csvManager = new CSVFileManager(this);
-        
-        // 获取用户名（现在不再从LoginActivity传递）
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("username")) {
-            currentUser = intent.getStringExtra("username");
-            Log.d(TAG, "Received username: '" + currentUser + "'");
-        } else {
-            // 设置默认用户或让用户选择
-            currentUser = "DefaultUser"; // 或者可以从CSV文件中选择第一个用户
-            Log.d(TAG, "Using default username: '" + currentUser + "'");
-        }
-        
-        // 设置ScrollView的边距
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setContentView(R.layout.activity_login);
 
-        initializeViews();
-        setupUserData();
+        // Initialize view components
+        initViews();
+        
+        // Setup click listeners
         setupClickListeners();
+
     }
 
-    private void initializeViews() {
-        creditInfoIconMain = findViewById(R.id.credit_info_icon_main);
-        mainUserName = findViewById(R.id.main_user_name);
-        mainUserEmail = findViewById(R.id.main_user_email);
-        
-        // 添加空值检查
-        if (mainUserName == null) {
-            Log.e(TAG, "mainUserName TextView not found!");
-        } else {
-            Log.d(TAG, "mainUserName TextView found successfully");
-        }
-        if (mainUserEmail == null) {
-            Log.e(TAG, "mainUserEmail TextView not found!");
-        } else {
-            Log.d(TAG, "mainUserEmail TextView found successfully");
-        }
-    }
-
-    private void setupUserData() {
-        if (currentUser != null && !currentUser.isEmpty()) {
-            Log.d(TAG, "Setting up data for user: '" + currentUser + "'");
-            
-            if (mainUserName != null) {
-                mainUserName.setText(currentUser);
-                Log.d(TAG, "Set username text to: " + currentUser);
-            }
-            
-            // Get Gmail from CSV data
-            Log.d(TAG, "Calling getUserGmail for: '" + currentUser + "'");
-            String userGmail = csvManager.getUserGmail(currentUser);
-            Log.d(TAG, "Retrieved Gmail: '" + userGmail + "'");
-            
-            if (mainUserEmail != null) {
-                mainUserEmail.setText(userGmail);
-                Log.d(TAG, "Set email text to: " + userGmail);
-            } else {
-                Log.e(TAG, "mainUserEmail is null, cannot set text");
-            }
-        } else {
-            Log.w(TAG, "No current user set or user is empty");
-        }
+    private void initViews() {
+        usernameEditText = findViewById(R.id.usernameEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        loginButton = findViewById(R.id.loginButton);
+        registerButton = findViewById(R.id.registerButton);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void setupClickListeners() {
-        Button profileButton = findViewById(R.id.profile_button);
-        if (profileButton != null) {
-            profileButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, MyProfileActivity.class);
-                    intent.putExtra("username", currentUser); // 传递当前登录的用户名
-                    startActivity(intent);
-                }
-            });
-        } else {
-            Log.e(TAG, "profileButton not found!");
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleLogin();
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleRegister();
+            }
+        });
+    }
+
+    private void handleLogin() {
+        String username = usernameEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        // Input validation
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Please enter username", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        // 信用信息图标
-        if (creditInfoIconMain != null) {
-            creditInfoIconMain.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "4 stars or above can borrow books from our platform", Toast.LENGTH_LONG).show();
-                }
-            });
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show progress bar and disable login button
+        showLoading(true);
+
+        // Authenticate user with database
+        ApiClient.getUserByUsername(username, new ApiClient.UserCallback() {
+            @Override
+            public void onSuccess(User user) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showLoading(false);
+                        
+                        // Verify password
+                        if (user.getPassword().equals(password)) {
+                            // Login successful
+                            Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                            
+                            // Calculate credit from API data (like alice_api_query.js logic)
+                            RentalDataManager.getUserCreditFromAPI(MainActivity.this, user.getUserId(), user.getUsername(), 
+                                new RentalDataManager.CreditCallback() {
+                                    @Override
+                                    public void onSuccess(int credit) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Navigate to dashboard page with API-calculated credit
+                                                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                                                intent.putExtra("username", username);
+                                                intent.putExtra("user_id", user.getUserId());
+                                                intent.putExtra("email", user.getEmail());
+                                                intent.putExtra("phone", user.getPhone());
+                                                intent.putExtra("gender", user.getGender());
+                                                intent.putExtra("distance", user.getDistance());
+                                                // Use API-calculated credit points (like alice_api_query.js)
+                                                intent.putExtra("credit", credit);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                    
+                                    @Override
+                                    public void onError(String error) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Fallback to local credit calculation
+                                                int localCredit = RentalDataManager.getUserCredit(MainActivity.this, user.getUsername());
+                                                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                                                intent.putExtra("username", username);
+                                                intent.putExtra("user_id", user.getUserId());
+                                                intent.putExtra("email", user.getEmail());
+                                                intent.putExtra("phone", user.getPhone());
+                                                intent.putExtra("gender", user.getGender());
+                                                intent.putExtra("distance", user.getDistance());
+                                                intent.putExtra("credit", localCredit);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                });
+                        } else {
+                            // Wrong password
+                            Toast.makeText(MainActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showLoading(false);
+                        Toast.makeText(MainActivity.this, "Login failed: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void handleRegister() {
+        // Navigate to registration activity or show registration dialog
+        Toast.makeText(this, "Registration feature to be implemented", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLoading(boolean show) {
+        if (show) {
+            progressBar.setVisibility(View.VISIBLE);
+            loginButton.setEnabled(false);
+            loginButton.setText("Logging in...");
         } else {
-            Log.e(TAG, "creditInfoIconMain not found!");
+            progressBar.setVisibility(View.GONE);
+            loginButton.setEnabled(true);
+            loginButton.setText("Login");
         }
     }
+
 }

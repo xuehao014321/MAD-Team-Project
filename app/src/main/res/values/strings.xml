@@ -32,7 +32,7 @@
     <string name="please_enter_item_name">Please enter item name</string>
     <string name="please_select_type">Please select type</string>
     <string name="please_select_status">Please select status</string>
-    <string name="rental_record_added_successfully">Rental record added successfully to CSV</string>
-    <string name="failed_to_add_record">Failed to add record to CSV</string>
+    <string name="rental_record_added_successfully">Rental record added successfully</string>
+    <string name="failed_to_add_record">Failed to add record</string>
     <string name="logged_out">Logged out</string>
 </resources>

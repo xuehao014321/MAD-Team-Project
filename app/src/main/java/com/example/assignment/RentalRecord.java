@@ -2,7 +2,7 @@ package com.example.assignment;
 
 public class RentalRecord {
     private String username;
-    private String password; // 添加密码字段
+    private String password; // Add password field
     private String itemName;
     private String type; // "Lend" or "Borrow"
     private String status; // "Available", "Completed", etc.
@@ -33,8 +33,8 @@ public class RentalRecord {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public String getPassword() { return password; } // 添加密码getter
-    public void setPassword(String password) { this.password = password; } // 添加密码setter
+    public String getPassword() { return password; } // Add password getter
+    public void setPassword(String password) { this.password = password; } // Add password setter
 
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }

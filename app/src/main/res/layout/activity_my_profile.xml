@@ -6,6 +6,7 @@
     android:background="#F5F5F5">
 
     <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -50,7 +51,7 @@
 
         </LinearLayout>
 
-        <!-- User Info Card -->
+        <!-- Combined User Info and Credit Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,44 +63,63 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- User Avatar -->
-                <ImageView
-                    android:id="@+id/user_avatar"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/circle_background"
-                    android:src="@drawable/ic_person"
-                    android:scaleType="centerCrop"
-                    android:layout_marginEnd="16dp" />
-
-                <!-- User Info -->
+                <!-- User Info Section -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
 
-                    <TextView
-                        android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Username"
-                        android:textSize="26sp"
-                        android:textStyle="bold"
-                        android:textColor="#333333"
-                        android:layout_marginBottom="8dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.01" />
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/circle_background"
+                        android:src="@drawable/ic_person"
+                        android:scaleType="centerCrop"
+                        android:layout_marginEnd="16dp" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="4dp">
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
+
+                            <TextView
+                                android:id="@+id/user_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Username"
+                                android:textSize="26sp"
+                                android:textStyle="bold"
+                                android:textColor="#333333"
+                                android:fontFamily="sans-serif-medium"
+                                android:letterSpacing="0.01" />
+
+                            <TextView
+                                android:id="@+id/user_gender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gender"
+                                android:textSize="14sp"
+                                android:background="@drawable/email_tag_background"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="4dp"
+                                android:textColor="#9C27B0"
+                                android:fontFamily="sans-serif"
+                                android:layout_marginStart="12dp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/user_email"
@@ -111,277 +131,100 @@
                             android:paddingHorizontal="12dp"
                             android:paddingVertical="4dp"
                             android:textColor="#9C27B0"
-                            android:fontFamily="sans-serif"
-                            android:layout_marginEnd="8dp" />
-
-                        <TextView
-                            android:id="@+id/user_gender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gender"
-                            android:textSize="14sp"
-                            android:background="@drawable/email_tag_background"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:textColor="#9C27B0"
                             android:fontFamily="sans-serif" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginVertical="8dp" />
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Credit Rating Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:background="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Credit"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="12dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:letterSpacing="0.01" />
-
+                <!-- Credit Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <RatingBar
-                        android:id="@+id/credit_rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:numStars="5"
-                        android:rating="4"
-                        android:stepSize="1"
-                        android:isIndicator="true"
-                        style="?android:attr/ratingBarStyleSmall" />
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/credit_points"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100 points"
-                        android:textSize="16sp"
-                        android:textColor="#333333"
-                        android:layout_marginStart="12dp"
-                        android:fontFamily="sans-serif" />
-
-                    <ImageView
-                        android:id="@+id/credit_info_icon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_info"
-                        android:layout_marginStart="8dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:padding="4dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Rental History -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:background="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="History of Rental"
+                        android:text="Credit"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="#333333"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="sans-serif-medium"
                         android:letterSpacing="0.01" />
 
-                    <Button
-                        android:id="@+id/add_rental_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="+ Add Rental"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp"
-                        android:background="@drawable/button_outline_background"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:fontFamily="sans-serif-medium" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <RatingBar
+                            android:id="@+id/credit_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:rating="4"
+                            android:stepSize="1"
+                            android:isIndicator="true"
+                            style="?android:attr/ratingBarStyleSmall" />
+
+                        <TextView
+                            android:id="@+id/credit_points"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 points"
+                            android:textSize="16sp"
+                            android:textColor="#333333"
+                            android:layout_marginStart="12dp"
+                            android:fontFamily="sans-serif" />
+
+                        <ImageView
+                            android:id="@+id/credit_info_icon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_info"
+                            android:layout_marginStart="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:padding="4dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
-
-                <!-- Dynamic Rental History Container -->
-                <LinearLayout
-                    android:id="@+id/rental_history_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Statistics Card -->
-        <androidx.cardview.widget.CardView
+        <!-- Rental Items Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rental Item"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.01" />
+
+        <!-- Dynamic items will be inserted here by the Java code -->
+        <LinearLayout
+            android:id="@+id/items_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:background="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Statistics"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:letterSpacing="0.01" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/items_lent_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="#9C27B0"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.01" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Items Lent"
-                            android:textSize="12sp"
-                            android:textColor="#666666"
-                            android:fontFamily="sans-serif" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/items_borrowed_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="#9C27B0"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.01" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Items Borrowed"
-                            android:textSize="12sp"
-                            android:textColor="#666666"
-                            android:fontFamily="sans-serif" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/reviews_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5"
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:textColor="#9C27B0"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.01" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Reviews"
-                            android:textSize="12sp"
-                            android:textColor="#666666"
-                            android:fontFamily="sans-serif" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp" />
 
         <!-- Logout Button -->
         <Button

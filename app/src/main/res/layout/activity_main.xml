@@ -119,7 +119,7 @@
                             android:id="@+id/main_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Loading..."
+                            android:text="Username"
                             android:textSize="22sp"
                             android:textStyle="bold"
                             android:textColor="#333333"
@@ -131,18 +131,12 @@
                             android:id="@+id/main_user_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Loading..."
-                            android:textSize="14sp"
+                            android:text="Gmail"
+                            android:textSize="12sp"
                             android:textColor="#666666"
                             android:fontFamily="sans-serif" />
 
                     </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_info"
-                        android:alpha="0.6" />
 
                 </LinearLayout>
 
@@ -153,7 +147,7 @@
                     android:layout_height="64dp"
                     android:text="View My Profile"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="25sp"
                     android:textStyle="bold"
                     android:background="@drawable/logout_button_background"
                     android:drawableStart="@drawable/ic_person"

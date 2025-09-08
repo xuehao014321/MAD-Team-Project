@@ -41,7 +41,14 @@ class ItemAdapter(
         holder.titleText.text = item.title
         holder.descriptionText.text = item.description
         holder.priceText.text = "RM${item.price}"
-        holder.distanceText.text = item.distance
+        // 处理距离显示，确保有km单位
+        val distance = item.distance.trim()
+        holder.distanceText.text = when {
+            distance.isEmpty() -> "0 km"
+            distance.endsWith("km") -> distance
+            distance.endsWith("m") -> distance.replace("m", "km")
+            else -> "$distance km"
+        }
         holder.ownerText.text = item.username
         holder.likesText.text = item.likes.toString()
         

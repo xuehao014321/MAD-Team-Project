@@ -1,0 +1,63 @@
+[
+  {
+    "user_id": "1757422142946brnlboqcp",
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "123456",
+    "phone": "1234567890",
+    "gender": "male",
+    "distance": 0,
+    "created_at": "2025-09-09T12:49:02.946Z"
+  },
+  {
+    "user_id": "1757422154729xdmypp2sm",
+    "username": "newuser",
+    "email": "new@example.com",
+    "password": "123456",
+    "phone": "9876543210",
+    "gender": "female",
+    "distance": 0,
+    "created_at": "2025-09-09T12:49:14.729Z"
+  },
+  {
+    "user_id": "175742460155188hxg2499",
+    "username": "testuser1",
+    "email": "test1@example.com",
+    "password": "123456",
+    "phone": "13800138001",
+    "gender": "male",
+    "distance": 0,
+    "created_at": "2025-09-09T21:30:01.552008"
+  },
+  {
+    "user_id": "1757424602084t0ed8xlrm",
+    "username": "testuser2",
+    "email": "test2@example.com",
+    "password": "123456",
+    "phone": "13800138002",
+    "gender": "female",
+    "distance": 0,
+    "created_at": "2025-09-09T21:30:02.084093"
+  },
+  {
+    "user_id": "1757424602613g92n3jfmh",
+    "username": "alice",
+    "email": "alice@gmail.com",
+    "password": "alice123",
+    "phone": "13900139001",
+    "gender": "female",
+    "distance": 0,
+    "created_at": "2025-09-09T21:30:02.613461"
+  },
+  {
+    "user_id": "17574259599764oxhjskrk",
+    "username": "john_doe",
+    "email": "john@example.com",
+    "password": "john123",
+    "phone": "13812345678",
+    "gender": "male",
+    "distance": 0,
+    "created_at": "2025-09-09T13:52:39.976Z",
+    "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=john_doe"
+  }
+]

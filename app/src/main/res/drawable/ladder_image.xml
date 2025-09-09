@@ -1,0 +1,55 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#F0F4FF"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 左侧支柱 -->
+  <path
+      android:fillColor="#8D6E63"
+      android:pathData="M70,20L80,20L80,130L70,130Z"/>
+  
+  <!-- 右侧支柱 -->
+  <path
+      android:fillColor="#8D6E63"
+      android:pathData="M120,20L130,20L130,130L120,130Z"/>
+  
+  <!-- 横档1 -->
+  <path
+      android:fillColor="#A1887F"
+      android:pathData="M80,35L120,35L120,40L80,40Z"/>
+  
+  <!-- 横档2 -->
+  <path
+      android:fillColor="#A1887F"
+      android:pathData="M80,55L120,55L120,60L80,60Z"/>
+  
+  <!-- 横档3 -->
+  <path
+      android:fillColor="#A1887F"
+      android:pathData="M80,75L120,75L120,80L80,80Z"/>
+  
+  <!-- 横档4 -->
+  <path
+      android:fillColor="#A1887F"
+      android:pathData="M80,95L120,95L120,100L80,100Z"/>
+  
+  <!-- 横档5 -->
+  <path
+      android:fillColor="#A1887F"
+      android:pathData="M80,115L120,115L120,120L80,120Z"/>
+  
+  <!-- 底部防滑垫 -->
+  <path
+      android:fillColor="#424242"
+      android:pathData="M65,125L85,125L85,135L65,135Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M115,125L135,125L135,135L115,135Z"/>
+
+</vector> 

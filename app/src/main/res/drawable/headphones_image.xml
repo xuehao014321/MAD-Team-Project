@@ -1,0 +1,46 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#E8F5E8"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 头带 -->
+  <path
+      android:fillColor="#2C2C2C"
+      android:pathData="M60,30C60,20 80,15 100,15C120,15 140,20 140,30L140,40C130,35 110,35 100,35C90,35 70,35 60,40Z"/>
+  
+  <!-- 左耳罩 -->
+  <path
+      android:fillColor="#1A1A1A"
+      android:pathData="M40,60C35,60 30,65 30,70L30,100C30,105 35,110 40,110L70,110C75,110 80,105 80,100L80,70C80,65 75,60 70,60Z"/>
+  
+  <!-- 右耳罩 -->
+  <path
+      android:fillColor="#1A1A1A"
+      android:pathData="M130,60C125,60 120,65 120,70L120,100C120,105 125,110 130,110L160,110C165,110 170,105 170,100L170,70C170,65 165,60 160,60Z"/>
+  
+  <!-- 左耳罩内部 -->
+  <path
+      android:fillColor="#333333"
+      android:pathData="M45,70C42,70 40,72 40,75L40,95C40,98 42,100 45,100L65,100C68,100 70,98 70,95L70,75C70,72 68,70 65,70Z"/>
+  
+  <!-- 右耳罩内部 -->
+  <path
+      android:fillColor="#333333"
+      android:pathData="M135,70C132,70 130,72 130,75L130,95C130,98 132,100 135,100L155,100C158,100 160,98 160,95L160,75C160,72 158,70 155,70Z"/>
+  
+  <!-- 连接臂 -->
+  <path
+      android:fillColor="#2C2C2C"
+      android:pathData="M70,40C75,45 85,50 90,55L80,65L70,50Z"/>
+  
+  <path
+      android:fillColor="#2C2C2C"
+      android:pathData="M130,40C125,45 115,50 110,55L120,65L130,50Z"/>
+
+</vector> 

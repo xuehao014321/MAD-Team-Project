@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#FFF3E0"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 锤子头部 -->
+  <path
+      android:fillColor="#795548"
+      android:pathData="M50,50L150,50L150,80L50,80Z"/>
+  
+  <!-- 锤子手柄 -->
+  <path
+      android:fillColor="#8D6E63"
+      android:pathData="M95,80L105,80L105,130L95,130Z"/>
+  
+  <!-- 锤子头部细节 -->
+  <path
+      android:fillColor="#5D4037"
+      android:pathData="M55,55L145,55L145,75L55,75Z"/>
+  
+  <!-- 手柄握把 -->
+  <path
+      android:fillColor="#6D4C41"
+      android:pathData="M92,120L108,120L108,130L92,130Z"/>
+
+</vector> 

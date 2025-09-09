@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- 手机外框 -->
+    <path
+        android:fillColor="#2C3E50"
+        android:pathData="M17,1H7C5.9,1 5,1.9 5,3v18c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2V3C19,1.9 18.1,1 17,1z"/>
+    
+    <!-- 屏幕 -->
+    <path
+        android:fillColor="#34495E"
+        android:pathData="M16,4H8c-0.55,0 -1,0.45 -1,1v11c0,0.55 0.45,1 1,1h8c0.55,0 1,-0.45 1,-1V5C17,4.45 16.55,4 16,4z"/>
+    
+    <!-- 屏幕发光效果 -->
+    <path
+        android:fillColor="#3498DB"
+        android:pathData="M15,5H9c-0.3,0 -0.5,0.2 -0.5,0.5v10c0,0.3 0.2,0.5 0.5,0.5h6c0.3,0 0.5,-0.2 0.5,-0.5v-10C15.5,5.2 15.3,5 15,5z"/>
+    
+    <!-- Home按钮 -->
+    <path
+        android:fillColor="#7F8C8D"
+        android:pathData="M12,18m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+    
+    <!-- 听筒 -->
+    <path
+        android:fillColor="#7F8C8D"
+        android:pathData="M10,2.5h4c0.3,0 0.5,0.2 0.5,0.5S14.3,3.5 14,3.5h-4C9.7,3.5 9.5,3.3 9.5,3S9.7,2.5 10,2.5z"/>
+    
+    <!-- 屏幕反光 -->
+    <path
+        android:fillColor="#5DADE2"
+        android:fillAlpha="0.3"
+        android:pathData="M9,6L13,6L13,8L9,8z"/>
+</vector> 

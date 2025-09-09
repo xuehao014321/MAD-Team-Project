@@ -1,0 +1,42 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#E3F2FD"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 电钻主体 -->
+  <path
+      android:fillColor="#424242"
+      android:pathData="M40,60L140,60L140,90L40,90Z"/>
+  
+  <!-- 钻头 -->
+  <path
+      android:fillColor="#616161"
+      android:pathData="M140,70L170,75L140,80Z"/>
+  
+  <!-- 手柄 -->
+  <path
+      android:fillColor="#424242"
+      android:pathData="M50,90L50,110L80,110L80,90Z"/>
+  
+  <!-- 触发器 -->
+  <path
+      android:fillColor="#FF5722"
+      android:pathData="M55,95L75,95L75,105L55,105Z"/>
+  
+  <!-- 电池 -->
+  <path
+      android:fillColor="#4CAF50"
+      android:pathData="M45,110L85,110L85,125L45,125Z"/>
+  
+  <!-- 文字 -->
+  <path
+      android:fillColor="#757575"
+      android:pathData="M60,40 Q70,35 80,40 Q70,45 60,40"/>
+  
+</vector> 

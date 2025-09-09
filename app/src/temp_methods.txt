@@ -1,0 +1,52 @@
+﻿    private void setupClickListeners() {
+        // Set up click listener for credit info icon
+        if (creditInfoIconMain != null) {
+            creditInfoIconMain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showToast("Credit Score: " + RentalDataManager.getUserCredit(MainActivity.this, currentUser) + " points", Toast.LENGTH_LONG);
+                }
+            });
+        }
+
+        // Set up click listeners for navigation buttons
+        Button addRentalButton = findViewById(R.id.add_rental_button);
+        if (addRentalButton != null) {
+            addRentalButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, AddRentalActivity.class);
+                    intent.putExtra("username", currentUser);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        Button viewRentalsButton = findViewById(R.id.view_rentals_button);
+        if (viewRentalsButton != null) {
+            viewRentalsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ViewRentalsActivity.class);
+                    intent.putExtra("username", currentUser);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        Button myProfileButton = findViewById(R.id.my_profile_button);
+        if (myProfileButton != null) {
+            myProfileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, MyProfileActivity.class);
+                    intent.putExtra("username", currentUser);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private void showToast(String message, int duration) {
+        Toast.makeText(this, message, duration).show();
+    }

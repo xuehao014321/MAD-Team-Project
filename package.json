@@ -1,0 +1,20 @@
+{
+  "name": "neighborlink-api-test",
+  "version": "1.0.0",
+  "description": "NeighborLink API测试工具",
+  "main": "api-test.js",
+  "scripts": {
+    "test": "node api-test.js",
+    "quick": "node quick-test.js",
+    "test-api": "node -e \"require('./api-test.js').testAPI()\"",
+    "test-upload": "node -e \"require('./api-test.js').testFileUpload()\"",
+    "test-db": "node -e \"require('./api-test.js').testDatabaseConnection()\""
+  },
+  "keywords": ["api", "test", "neighborlink"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "form-data": "^4.0.0"
+  }
+}

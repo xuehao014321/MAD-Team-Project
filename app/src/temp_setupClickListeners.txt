@@ -1,0 +1,24 @@
+    private void setupClickListeners() {
+        // Set up click listener for credit info icon
+        if (creditInfoIconMain != null) {
+            creditInfoIconMain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showToast("Credit Score: " + RentalDataManager.getUserCredit(MainActivity.this, currentUser) + " points", Toast.LENGTH_LONG);
+                }
+            });
+        }
+
+        // Set up click listener for profile button
+        Button profileButton = findViewById(R.id.profile_button);
+        if (profileButton != null) {
+            profileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, MyProfileActivity.class);
+                    intent.putExtra("username", currentUser);
+                    startActivity(intent);
+                }
+            });
+        }
+    }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 性别选项 -->
+    <!-- Gender options -->
     <string-array name="gender_options">
         <item>--Please Select--</item>
         <item>Male</item>

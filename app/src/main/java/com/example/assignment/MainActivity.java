@@ -8,16 +8,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.ProgressBar;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private EditText usernameEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
     private Button registerButton;
     private ProgressBar progressBar;
+    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        usernameEditText = findViewById(R.id.usernameEditText);
+        emailEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
@@ -51,18 +54,24 @@ public class MainActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleRegister();
+                Toast.makeText(MainActivity.this, "Registration feature not available", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void handleLogin() {
-        String username = usernameEditText.getText().toString().trim();
+        String emailOrPhone = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
         // Input validation
-        if (username.isEmpty()) {
-            Toast.makeText(this, "Please enter username", Toast.LENGTH_SHORT).show();
+        if (emailOrPhone.isEmpty()) {
+            Toast.makeText(this, "Please enter email address or phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Email or phone format validation
+        if (!isValidEmail(emailOrPhone) && !isValidPhoneNumber(emailOrPhone)) {
+            Toast.makeText(this, "Please enter a valid email address or phone number", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -74,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         // Show progress bar and disable login button
         showLoading(true);
 
-        // Authenticate user with database
-        ApiClient.getUserByUsername(username, new ApiClient.UserCallback() {
+        // Authenticate user with database using email or phone
+        ApiClient.getUserByEmailOrPhone(emailOrPhone, new ApiClient.UserCallback() {
             @Override
             public void onSuccess(User user) {
                 runOnUiThread(new Runnable() {
@@ -98,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                             public void run() {
                                                 // Navigate to dashboard page with API-calculated credit
                                                 Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                                                intent.putExtra("username", username);
+                                                intent.putExtra("username", user.getUsername());
                                                 intent.putExtra("user_id", user.getUserId());
                                                 intent.putExtra("email", user.getEmail());
                                                 intent.putExtra("phone", user.getPhone());
@@ -120,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                                                 // Fallback to local credit calculation
                                                 int localCredit = RentalDataManager.getUserCredit(MainActivity.this, user.getUsername());
                                                 Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                                                intent.putExtra("username", username);
+                                                intent.putExtra("username", user.getUsername());
                                                 intent.putExtra("user_id", user.getUserId());
                                                 intent.putExtra("email", user.getEmail());
                                                 intent.putExtra("phone", user.getPhone());
@@ -154,10 +163,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void handleRegister() {
-        // Navigate to registration activity or show registration dialog
-        Toast.makeText(this, "Registration feature to be implemented", Toast.LENGTH_SHORT).show();
-    }
+
 
     private void showLoading(boolean show) {
         if (show) {
@@ -169,6 +175,34 @@ public class MainActivity extends AppCompatActivity {
             loginButton.setEnabled(true);
             loginButton.setText("Login");
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        return email != null && 
+               email.contains("@") && 
+               email.contains(".") && 
+               email.length() > 5 && 
+               email.indexOf("@") > 0 && 
+               email.lastIndexOf(".") > email.indexOf("@") + 1 &&
+               email.lastIndexOf(".") < email.length() - 1;
+    }
+
+    private boolean isValidPhoneNumber(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+        
+        // Remove any spaces, dashes, or parentheses
+        String cleanPhone = phone.replaceAll("[\\s\\-\\(\\)\\+]", "");
+        
+        // Check if it contains only digits
+        if (!cleanPhone.matches("\\d+")) {
+            return false;
+        }
+        
+        // Check length (typically 10-15 digits for international numbers)
+        int length = cleanPhone.length();
+        return length >= 10 && length <= 15;
     }
 
 }

@@ -62,6 +62,19 @@ public class User {
         this.avatar_url = null;
     }
 
+    // Constructor for sign up form (simplified)
+    public User(String username, String password, String email, String phone, String category) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.gender = category; // Using gender field to store category
+        this.credit = 0; // Default credit is 0
+        this.distance = "0"; // Default distance
+        this.created_at = null;
+        this.avatar_url = null;
+    }
+
     // Complete constructor (includes all API fields)
     public User(int user_id, String username, String email, String password, String phone, 
                 String gender, String distance, String created_at, String avatar_url, int credit) {

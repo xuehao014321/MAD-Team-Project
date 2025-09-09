@@ -1,22 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NeighborLink</string>
+    <string name="app_name">Assignment</string>
     
-    <!-- Common strings -->
-    <string name="welcome_text">Welcome to</string>
-    <string name="subtitle_text">Share, Borrow, Connect</string>
-    <string name="profile_button_text">View My Profile</string>
-    <string name="credit_points_text">Credit Points</string>
-    <string name="active_rentals_text">Active Rentals</string>
-    <string name="back_button_text">Back</string>
-    <string name="logout_button_text">Log Out</string>
-    <string name="history_of_rental_text">History of Rental</string>
-    <string name="statistics_text">Statistics</string>
-    <string name="items_lent_text">Items Lent</string>
-    <string name="items_borrowed_text">Items Borrowed</string>
-    <string name="reviews_text">Reviews</string>
-    <string name="credit_text">Credit</string>
-    <string name="no_rental_records_text">No rental records</string>
-    <string name="credit_info_tooltip">4 stars or above can borrow books from our platform</string>
-    <string name="logged_out">Logged out</string>
+    <!-- Sign Up Activity -->
+    <string-array name="user_categories">
+        <item>--Please Select--</item>
+        <item>Student</item>
+        <item>Professional</item>
+        <item>Homeowner</item>
+        <item>Renter</item>
+        <item>Other</item>
+    </string-array>
 </resources>

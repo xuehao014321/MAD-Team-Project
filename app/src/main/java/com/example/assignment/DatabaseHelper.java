@@ -124,7 +124,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setEmail(email);
             user.setPhone(phone);
             // Set default values
-            user.setPassword("");  // No password field in database
+            user.setGender("");    // No gender field in database
+            user.setDistanceString("0");  // Default distance
+            user.setCreatedAt("");        // No creation time field in database
+            user.setAvatarUrl(null);      // No avatar field in database
+            user.setCredit(0);            // Default credit
+        }
+        
+        cursor.close();
+        return user;
+    }
+    
+    /**
+     * Get user by email
+     */
+    public User getUserByEmail(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+        
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+        
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID));
+            String username = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USERNAME));
+            String phone = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PHONE));
+            
+            // Create User object using default constructor and setter methods
+            user = new User();
+            user.setUserId(id);
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPhone(phone);
+            // Set default values
             user.setGender("");    // No gender field in database
             user.setDistanceString("0");  // Default distance
             user.setCreatedAt("");        // No creation time field in database

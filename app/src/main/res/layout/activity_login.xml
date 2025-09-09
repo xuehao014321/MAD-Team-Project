@@ -83,11 +83,11 @@
                 android:orientation="vertical"
                 android:padding="32dp">
 
-                <!-- Username Input -->
+                <!-- Email Input -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Username"
+                    android:text="Email"
                     android:textSize="16sp"
                     android:textColor="#333333"
                     android:layout_marginBottom="8dp"
@@ -99,7 +99,7 @@
                     android:layout_height="56dp"
                     android:background="@drawable/input_background"
                     android:padding="16dp"
-                    android:hint="Enter your username"
+                    android:hint="Enter your email or phone number"
                     android:textSize="16sp"
                     android:textColor="#333333"
                     android:textColorHint="#999999"

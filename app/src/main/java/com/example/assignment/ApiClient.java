@@ -128,6 +128,62 @@ public class ApiClient {
         });
     }
 
+    // ✅ Get user by email (search from user list)
+    public static void getUserByEmail(String email, UserCallback callback) {
+        getAllUsers(new UsersListCallback() {
+            @Override
+            public void onSuccess(List<User> users) {
+                // Search for user with specified email in user list
+                User foundUser = null;
+                for (User user : users) {
+                    if (user.getEmail().equals(email)) {
+                        foundUser = user;
+                        break;
+                    }
+                }
+
+                if (foundUser != null) {
+                    callback.onSuccess(foundUser);
+                } else {
+                    callback.onError("User with email '" + email + "' does not exist");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    // ✅ Get user by email or phone number (search from user list)
+    public static void getUserByEmailOrPhone(String emailOrPhone, UserCallback callback) {
+        getAllUsers(new UsersListCallback() {
+            @Override
+            public void onSuccess(List<User> users) {
+                // Search for user with specified email or phone number in user list
+                User foundUser = null;
+                for (User user : users) {
+                    if (user.getEmail().equals(emailOrPhone) || user.getPhone().equals(emailOrPhone)) {
+                        foundUser = user;
+                        break;
+                    }
+                }
+
+                if (foundUser != null) {
+                    callback.onSuccess(foundUser);
+                } else {
+                    callback.onError("User with email/phone '" + emailOrPhone + "' does not exist");
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
     // ✅ Get user by ID
     public static void getUserById(int userId, UserCallback callback) {
         getAllUsers(new UsersListCallback() {

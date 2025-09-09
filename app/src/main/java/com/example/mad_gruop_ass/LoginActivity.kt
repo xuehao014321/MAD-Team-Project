@@ -1,4 +1,4 @@
-package com.example.mad_gruop_ass
+﻿package com.example.mad_gruop_ass
 
 import android.content.Intent
 import android.os.Bundle
@@ -24,7 +24,6 @@ class LoginActivity : ComponentActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
     private lateinit var signUpButton: Button
-    private lateinit var debugButton: Button
     private lateinit var progressBar: ProgressBar
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +39,6 @@ class LoginActivity : ComponentActivity() {
         passwordEditText = findViewById(R.id.passwordEditText)
         loginButton = findViewById(R.id.loginButton)
         signUpButton = findViewById(R.id.signUpButton)
-        debugButton = findViewById(R.id.debugButton)
         progressBar = findViewById(R.id.progressBar)
     }
     
@@ -51,10 +49,6 @@ class LoginActivity : ComponentActivity() {
         
         signUpButton.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
-        }
-        
-        debugButton.setOnClickListener {
-            testServerConnection()
         }
     }
     
@@ -102,7 +96,7 @@ class LoginActivity : ComponentActivity() {
                         // 登录成功
                         Toast.makeText(
                             this@LoginActivity,
-                            "登录成功! 欢迎 ${matchedUser.username}",
+                            "登录成功! 欢迎 ",
                             Toast.LENGTH_SHORT
                         ).show()
                         
@@ -124,7 +118,7 @@ class LoginActivity : ComponentActivity() {
                     showLoading(false)
                     Toast.makeText(
                         this@LoginActivity,
-                        "服务器错误: ${response.code()}，请稍后重试",
+                        "服务器错误: ，请稍后重试",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -132,46 +126,7 @@ class LoginActivity : ComponentActivity() {
                 showLoading(false)
                 Toast.makeText(
                     this@LoginActivity,
-                    "网络错误: ${e.message}，请检查网络连接后重试",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-    
-    
-    private fun testServerConnection() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            Toast.makeText(this, "No network connection available", Toast.LENGTH_LONG).show()
-            return
-        }
-        
-        showLoading(true)
-        
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.apiService.testConnection()
-                showLoading(false)
-                
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "✅ Server connection successful!\nServer response: ${result?.get("message") ?: "OK"}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "❌ Server responded with error: ${response.code()}\n${response.message()}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Exception) {
-                showLoading(false)
-                Toast.makeText(
-                    this@LoginActivity,
-                    "❌ Connection failed: ${e.message}\n\nPlease check:\n1. Server is running\n2. You're on the same network\n3. Firewall settings",
+                    "网络错误: ，请检查网络连接后重试",
                     Toast.LENGTH_LONG
                 ).show()
             }

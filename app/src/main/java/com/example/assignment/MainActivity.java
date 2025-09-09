@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                             // Login successful
                             Toast.makeText(MainActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                             
-                            // Calculate credit from API data (like alice_api_query.js logic)
+                            // Calculate credit from API data
                             RentalDataManager.getUserCreditFromAPI(MainActivity.this, user.getUserId(), user.getUsername(), 
                                 new RentalDataManager.CreditCallback() {
                                     @Override
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                                 intent.putExtra("phone", user.getPhone());
                                                 intent.putExtra("gender", user.getGender());
                                                 intent.putExtra("distance", user.getDistance());
-                                                // Use API-calculated credit points (like alice_api_query.js)
+                                                // Use API-calculated credit points
                                                 intent.putExtra("credit", credit);
                                                 startActivity(intent);
                                                 finish();

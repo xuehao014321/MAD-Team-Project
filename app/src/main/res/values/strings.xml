@@ -10,7 +10,6 @@
     <string name="active_rentals_text">Active Rentals</string>
     <string name="back_button_text">Back</string>
     <string name="logout_button_text">Log Out</string>
-    <string name="add_rental_button_text">+ Add Rental</string>
     <string name="history_of_rental_text">History of Rental</string>
     <string name="statistics_text">Statistics</string>
     <string name="items_lent_text">Items Lent</string>
@@ -19,20 +18,5 @@
     <string name="credit_text">Credit</string>
     <string name="no_rental_records_text">No rental records</string>
     <string name="credit_info_tooltip">4 stars or above can borrow books from our platform</string>
-    
-    <!-- Add Rental Activity -->
-    <string name="add_rental_title">Add Rental</string>
-    <string name="item_name_hint">Enter item name</string>
-    <string name="description_hint">Enter description</string>
-    <string name="type_lend_text">Lend</string>
-    <string name="type_borrow_text">Borrow</string>
-    <string name="status_ongoing_text">On going</string>
-    <string name="status_completed_text">Completed</string>
-    <string name="add_button_text">Add</string>
-    <string name="please_enter_item_name">Please enter item name</string>
-    <string name="please_select_type">Please select type</string>
-    <string name="please_select_status">Please select status</string>
-    <string name="rental_record_added_successfully">Rental record added successfully</string>
-    <string name="failed_to_add_record">Failed to add record</string>
     <string name="logged_out">Logged out</string>
 </resources>

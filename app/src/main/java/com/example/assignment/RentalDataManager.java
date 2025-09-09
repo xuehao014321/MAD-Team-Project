@@ -13,26 +13,7 @@ public class RentalDataManager {
     private static final String PREF_NAME = "rental_data";
     private static final String KEY_ADDED_RECORDS = "added_records";
     
-    public static void addRentalRecord(Context context, RentalRecord record) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        
-        // Get existing records count
-        int count = prefs.getInt("record_count", 0);
-        
-        // Save the new record
-        editor.putString("record_" + count + "_username", record.getUsername());
-        editor.putString("record_" + count + "_item", record.getItemName());
-        editor.putString("record_" + count + "_type", record.getType());
-        editor.putString("record_" + count + "_status", record.getStatus());
-        editor.putString("record_" + count + "_description", record.getDescription());
-        editor.putString("record_" + count + "_distance", record.getDistance());
-        editor.putInt("record_" + count + "_credit", record.getCredit());
-        
-        // Increment count
-        editor.putInt("record_count", count + 1);
-        editor.apply();
-    }
+
     
     /**
      * Get all records that were added to SharedPreferences
@@ -165,6 +146,50 @@ public class RentalDataManager {
         void onError(String error);
     }
     
+    /**
+     * Get available items count for a user from API (only Available status)
+     * @param context Application context
+     * @param userId User ID to query
+     * @param callback Callback to handle the result
+     */
+    public static void getAvailableItemsCountFromAPI(Context context, int userId, final AvailableItemsCallback callback) {
+        Log.d("RentalDataManager", "=== GETTING AVAILABLE ITEMS COUNT FROM API FOR USER ID: " + userId + " ===");
+        
+        ApiClient.getItemsByUserId(userId, new ApiClient.ItemsListCallback() {
+            @Override
+            public void onSuccess(List<Item> items) {
+                int availableCount = 0;
+                
+                // Count only Available items
+                for (Item item : items) {
+                    if ("Available".equals(item.getStatus())) {
+                        availableCount++;
+                    }
+                    Log.d("RentalDataManager", "Item: " + item.getTitle() + " | Status: " + item.getStatus());
+                }
+                
+                Log.d("RentalDataManager", "Available items count for user " + userId + ": " + availableCount);
+                Log.d("RentalDataManager", "=== AVAILABLE ITEMS COUNT COMPLETE ===");
+                
+                callback.onSuccess(availableCount);
+            }
+            
+            @Override
+            public void onError(String error) {
+                Log.e("RentalDataManager", "Failed to get available items from API: " + error);
+                callback.onError(error);
+            }
+        });
+    }
+    
+    /**
+     * Callback interface for available items count from API
+     */
+    public interface AvailableItemsCallback {
+        void onSuccess(int availableCount);
+        void onError(String error);
+    }
+    
     public static int getUserCredit(Context context, String username) {
         // Calculate credit score based on actual activities
         return calculateUserCredit(context, username);
@@ -262,9 +287,7 @@ public class RentalDataManager {
         
         Log.d("RentalDataManager", "=== Test Complete ===");
     }
-    
-    
-    
+
     /**
      * Test method to get total items count from API for a specific user ID
      * @param context Application context
@@ -289,7 +312,7 @@ public class RentalDataManager {
     }
 
     /**
-     * Calculate user credit dynamically based on API item data (like alice_api_query.js logic)
+     * Calculate user credit dynamically based on API item data
      * Base score: 50 points
      * Each item owned: +5 points
      * Formula: 50 + (total_items_from_api × 5)
@@ -297,13 +320,13 @@ public class RentalDataManager {
     public static void getUserCreditFromAPI(Context context, int userId, String username, final CreditCallback callback) {
         Log.d("RentalDataManager", "=== CALCULATING CREDIT FROM API FOR USER: " + username + " (ID: " + userId + ") ===");
         
-        // 获取用户在API中的所有物品（类似alice_api_query.js的逻辑）
+        // Get all items for user from API
         ApiClient.getItemsByUserId(userId, new ApiClient.ItemsListCallback() {
             @Override
             public void onSuccess(List<Item> items) {
-                int baseCredit = 50; // 基础credit分数
-                int totalItems = items.size(); // API中的物品总数
-                int calculatedCredit = baseCredit + (totalItems * 5); // 每个物品+5分
+                int baseCredit = 50; // Base credit score
+                int totalItems = items.size(); // Total items count from API
+                int calculatedCredit = baseCredit + (totalItems * 5); // +5 points per item
                 
                 Log.d("RentalDataManager", "🎯 === API CREDIT CALCULATION RESULT === 🎯");
                 Log.d("RentalDataManager", "👤 User: " + username + " (ID: " + userId + ")");
@@ -312,7 +335,7 @@ public class RentalDataManager {
                 Log.d("RentalDataManager", "➕ Points from items: " + (totalItems * 5));
                 Log.d("RentalDataManager", "🎉 Final calculated credit: " + calculatedCredit);
                 
-                // 显示物品详情（类似alice_api_query.js）
+                // Display item details
                 if (totalItems > 0) {
                     Log.d("RentalDataManager", "📋 Item details:");
                     for (int i = 0; i < items.size(); i++) {
@@ -332,7 +355,7 @@ public class RentalDataManager {
             public void onError(String error) {
                 Log.e("RentalDataManager", "❌ Failed to get items from API for credit calculation: " + error);
                 
-                // 如果API调用失败，fallback到本地计算
+                // If API call fails, fallback to local calculation
                 Log.d("RentalDataManager", "💡 Fallback to local credit calculation");
                 int localCredit = calculateUserCredit(context, username);
                 callback.onSuccess(localCredit);
@@ -348,65 +371,7 @@ public class RentalDataManager {
         void onError(String error);
     }
 
-    /**
-     * Test Alice user credit calculation from API (like alice_api_query.js)
-     * Alice user ID is 1 in the API
-     */
-    public static void testAliceApiCredit(Context context, final CreditCallback callback) {
-        final int ALICE_USER_ID = 1; // Alice's user ID in API
-        Log.d("RentalDataManager", "🎯 === ALICE API CREDIT TEST (like alice_api_query.js) === 🎯");
-        
-        // First get Alice user info from API
-        ApiClient.getUserById(ALICE_USER_ID, new ApiClient.UserCallback() {
-            @Override
-            public void onSuccess(User aliceUser) {
-                Log.d("RentalDataManager", "👤 Alice用户信息:");
-                Log.d("RentalDataManager", "   - 用户ID: " + aliceUser.getUserId());
-                Log.d("RentalDataManager", "   - 用户名: " + aliceUser.getUsername());
-                Log.d("RentalDataManager", "   - 邮箱: " + aliceUser.getEmail());
-                Log.d("RentalDataManager", "   - 电话: " + aliceUser.getPhone());
-                
-                // Then calculate credit using API items
-                getUserCreditFromAPI(context, ALICE_USER_ID, aliceUser.getUsername(), new CreditCallback() {
-                    @Override
-                    public void onSuccess(int credit) {
-                        Log.d("RentalDataManager", "🎉 Alice用户积分测试完成: " + credit + "分");
-                        callback.onSuccess(credit);
-                    }
-                    
-                    @Override
-                    public void onError(String error) {
-                        Log.e("RentalDataManager", "❌ Alice积分计算失败: " + error);
-                        callback.onError(error);
-                    }
-                });
-            }
-            
-            @Override
-            public void onError(String error) {
-                Log.e("RentalDataManager", "❌ 无法获取Alice用户信息: " + error);
-                callback.onError("无法获取Alice用户信息: " + error);
-            }
-        });
-    }
+
     
-    /**
-     * Add test rental data for demonstration purposes
-     */
-    public static void addTestData(Context context) {
-        Log.d("RentalDataManager", "Adding test rental data...");
-        
-        // Add some sample rental records for different users
-        addRentalRecord(context, new RentalRecord("alice", "Laptop", "Lend", "Available", "MacBook Pro 2021", "0.5 km", 5));
-        addRentalRecord(context, new RentalRecord("alice", "Camera", "Lend", "Available", "Canon DSLR", "1.2 km", 5));
-        addRentalRecord(context, new RentalRecord("alice", "Book", "Borrow", "Borrowed", "Java Programming", "2.1 km", 0));
-        
-        addRentalRecord(context, new RentalRecord("bob", "Bicycle", "Lend", "Available", "Mountain bike", "0.8 km", 5));
-        addRentalRecord(context, new RentalRecord("bob", "Textbook", "Borrow", "Borrowed", "Physics textbook", "1.5 km", 0));
-        
-        addRentalRecord(context, new RentalRecord("charlie", "Power Bank", "Lend", "Available", "20000mAh power bank", "0.3 km", 5));
-        addRentalRecord(context, new RentalRecord("charlie", "Umbrella", "Borrow", "Borrowed", "Black umbrella", "1.0 km", 0));
-        
-        Log.d("RentalDataManager", "Test data added successfully");
-    }
+
 } 

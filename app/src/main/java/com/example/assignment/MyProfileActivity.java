@@ -181,15 +181,6 @@ public class MyProfileActivity extends AppCompatActivity {
             List<RentalRecord> userHistory = RentalDataManager.getRentalHistoryForUser(this, finalUser.getUsername());
             Log.d(TAG, "Total rental records for user " + finalUser.getUsername() + ": " + userHistory.size());
             
-            // Add test data if no records exist
-            if (userHistory.size() == 0) {
-                Log.d(TAG, "No existing records found. Adding test data...");
-                RentalDataManager.addTestData(this);
-                // Re-fetch after adding test data
-                userHistory = RentalDataManager.getRentalHistoryForUser(this, finalUser.getUsername());
-                Log.d(TAG, "Records after adding test data: " + userHistory.size());
-            }
-            
             // Test: Query item counts for all users
             RentalDataManager.testUserItemCounts(this);
             

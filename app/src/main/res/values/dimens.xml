@@ -24,4 +24,14 @@
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_small">20dp</dimen>
     <dimen name="icon_size_tiny">18dp</dimen>
+    
+    <!-- ÏêÇéÒ³Ãæ³ß´ç -->
+    <dimen name="detail_image_height">300dp</dimen>
+    <dimen name="detail_button_height">48dp</dimen>
+    <dimen name="detail_text_margin">16dp</dimen>
+    <dimen name="detail_section_margin">24dp</dimen>
+    <dimen name="detail_button_margin">8dp</dimen>
+    <dimen name="detail_avatar_size">40dp</dimen>
+    <dimen name="detail_status_padding">8dp</dimen>
+    <dimen name="detail_navbar_height">56dp</dimen>
 </resources> 

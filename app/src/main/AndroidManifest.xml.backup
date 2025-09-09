@@ -36,13 +36,6 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
         
-        
-        <!-- 新增：物品详情页面 -->
-        <activity
-            android:name=".ItemDetailActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        
-    </application>
+            <!-- 新增：物品详情页面 -->`n        <activity`n            android:name=".ItemDetailActivity"`n            android:exported="false"`n            android:parentActivityName=".MainActivity" />`n        `n    </application>
 
 </manifest>

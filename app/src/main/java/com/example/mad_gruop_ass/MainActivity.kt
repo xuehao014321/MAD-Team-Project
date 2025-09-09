@@ -1,4 +1,4 @@
-package com.example.mad_gruop_ass
+﻿package com.example.mad_gruop_ass
 
 import android.content.Intent
 import android.os.Bundle
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // 返回首页时刷新，保证数据同步
+        // 杩斿洖棣栭〉鏃跺埛鏂帮紝淇濊瘉鏁版嵁鍚屾
         refreshData()
     }
     
@@ -42,7 +42,16 @@ class MainActivity : AppCompatActivity() {
         
         itemAdapter = ItemAdapter(itemList) { item ->
             // Handle item click - navigate to detail page
-            // TODO: Implement navigation to detail page
+            val intent = Intent(this@MainActivity, ItemDetailActivity::class.java)
+            intent.putExtra("itemTitle", item.title)
+            intent.putExtra("itemDescription", item.description)
+            intent.putExtra("itemImageUrl", item.imageUrl)
+            intent.putExtra("itemStatus", item.status)
+            intent.putExtra("itemLikes", item.likes)
+            intent.putExtra("itemDistance", item.distance)
+            intent.putExtra("itemCreatedAt", item.createdAt)
+            intent.putExtra("itemUsername", item.username)
+            startActivity(intent)
         }
         recyclerView.adapter = itemAdapter
         

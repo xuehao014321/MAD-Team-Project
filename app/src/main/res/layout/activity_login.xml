@@ -141,27 +141,27 @@
                     android:visibility="gone" />
 
                 <!-- Login Button -->
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/loginButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Login"
                     android:textSize="18sp"
                     android:textColor="#FFFFFF"
-                    android:background="@drawable/button_outline_background"
+                    android:background="@drawable/gray_button_background"
                     android:layout_marginBottom="16dp"
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.01" />
 
                 <!-- Register Button -->
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/registerButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="Sign Up"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textColor="#FFFFFF"
-                    android:background="@drawable/button_outline_background"
+                    android:background="@drawable/gray_button_background"
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.01" />
 

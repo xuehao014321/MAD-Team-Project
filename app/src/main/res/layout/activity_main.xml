@@ -20,7 +20,7 @@
             android:orientation="vertical"
             android:padding="24dp"
             android:paddingTop="48dp"
-            android:background="@drawable/logout_button_background">
+            android:background="@drawable/gray_background">
 
             <!-- App Logo/Icon -->
             <ImageView
@@ -141,16 +141,15 @@
                 </LinearLayout>
 
                 <!-- Action Button -->
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/profile_button"
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
                     android:text="View My Profile"
                     android:textColor="#FFFFFF"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:background="@drawable/logout_button_background"
-                    android:drawableStart="@drawable/ic_person"
+                    android:background="@drawable/gray_button_background"
                     android:drawablePadding="12dp"
                     android:gravity="center"
                     android:layout_marginBottom="16dp"
@@ -246,7 +245,6 @@
                             android:letterSpacing="0.01" />
 
                     </LinearLayout>
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -256,3 +254,4 @@
     </LinearLayout>
 
 </ScrollView>
+

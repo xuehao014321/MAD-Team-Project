@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="&lt; Back"
-                android:textColor="#9C27B0"
+                android:textColor="#6D6D6D"
                 android:textSize="16sp"
                 android:clickable="true"
                 android:focusable="true"
@@ -115,7 +115,7 @@
                                 android:background="@drawable/email_tag_background"
                                 android:paddingHorizontal="12dp"
                                 android:paddingVertical="4dp"
-                                android:textColor="#9C27B0"
+                                android:textColor="#6D6D6D"
                                 android:fontFamily="sans-serif"
                                 android:layout_marginStart="12dp" />
 
@@ -130,7 +130,7 @@
                             android:background="@drawable/email_tag_background"
                             android:paddingHorizontal="12dp"
                             android:paddingVertical="4dp"
-                            android:textColor="#9C27B0"
+                            android:textColor="#6D6D6D"
                             android:fontFamily="sans-serif" />
 
                     </LinearLayout>
@@ -227,7 +227,7 @@
             android:layout_marginBottom="16dp" />
 
         <!-- Logout Button -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -235,7 +235,7 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:background="@drawable/logout_button_background"
+            android:background="@drawable/gray_button_background"
             android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif-medium"
             android:letterSpacing="0.01" />

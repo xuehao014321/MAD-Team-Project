@@ -31,16 +31,12 @@
         <activity
             android:name=".MyProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".SignUpActivity"
-            android:exported="false" />
+
+
 
 
         <activity
-            android:name=".ApiTestActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AliceTestRunner"
+            android:name=".AboutActivity"
             android:exported="false" />
     </application>
 

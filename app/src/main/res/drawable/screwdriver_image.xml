@@ -1,0 +1,62 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#E8F5E8"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 工具箱 -->
+  <path
+      android:fillColor="#424242"
+      android:pathData="M30,40L170,40L170,120L30,120Z"/>
+  
+  <!-- 工具箱盖子 -->
+  <path
+      android:fillColor="#616161"
+      android:pathData="M30,40L170,40L170,55L30,55Z"/>
+  
+  <!-- 螺丝刀1 -->
+  <path
+      android:fillColor="#FF5722"
+      android:pathData="M50,60L60,60L60,100L50,100Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M53,100L57,100L57,110L53,110Z"/>
+  
+  <!-- 螺丝刀2 -->
+  <path
+      android:fillColor="#2196F3"
+      android:pathData="M70,60L80,60L80,100L70,100Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M73,100L77,100L77,110L73,110Z"/>
+  
+  <!-- 螺丝刀3 -->
+  <path
+      android:fillColor="#4CAF50"
+      android:pathData="M90,60L100,60L100,100L90,100Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M93,100L97,100L97,110L93,110Z"/>
+  
+  <!-- 螺丝刀4 -->
+  <path
+      android:fillColor="#FFC107"
+      android:pathData="M110,60L120,60L120,100L110,100Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M113,100L117,100L117,110L113,110Z"/>
+  
+  <!-- 螺丝刀5 -->
+  <path
+      android:fillColor="#9C27B0"
+      android:pathData="M130,60L140,60L140,100L130,100Z"/>
+  <path
+      android:fillColor="#424242"
+      android:pathData="M133,100L137,100L137,110L133,110Z"/>
+
+</vector> 

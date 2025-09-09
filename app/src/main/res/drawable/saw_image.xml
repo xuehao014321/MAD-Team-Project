@@ -1,0 +1,52 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+  
+  <!-- 背景 -->
+  <path
+      android:fillColor="#FFEBEE"
+      android:pathData="M0,0L200,0L200,150L0,150Z"/>
+  
+  <!-- 电锯主体 -->
+  <path
+      android:fillColor="#FF5722"
+      android:pathData="M30,60L120,60L120,100L30,100Z"/>
+  
+  <!-- 引擎部分 -->
+  <path
+      android:fillColor="#D84315"
+      android:pathData="M40,50L110,50L110,70L40,70Z"/>
+  
+  <!-- 锯条导板 -->
+  <path
+      android:fillColor="#616161"
+      android:pathData="M120,70L180,70L180,90L120,90Z"/>
+  
+  <!-- 锯条 -->
+  <path
+      android:fillColor="#424242"
+      android:pathData="M125,75L175,75L175,85L125,85Z"/>
+  
+  <!-- 锯条齿 -->
+  <path
+      android:fillColor="#212121"
+      android:pathData="M130,75L135,70L140,75L145,70L150,75L155,70L160,75L165,70L170,75L175,85L125,85Z"/>
+  
+  <!-- 手柄 -->
+  <path
+      android:fillColor="#795548"
+      android:pathData="M20,80L40,80L40,110L20,110Z"/>
+  
+  <!-- 启动绳 -->
+  <path
+      android:fillColor="#2196F3"
+      android:pathData="M100,50L100,40L105,40L105,50Z"/>
+  
+  <!-- 油箱 -->
+  <path
+      android:fillColor="#4CAF50"
+      android:pathData="M50,100L90,100L90,110L50,110Z"/>
+
+</vector> 

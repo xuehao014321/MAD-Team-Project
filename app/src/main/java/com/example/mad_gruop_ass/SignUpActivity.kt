@@ -380,9 +380,8 @@ class SignUpActivity : ComponentActivity() {
              errorMessage.contains("exists", ignoreCase = true)) -> {
                 emailEditText.error = "This email is already registered"
                 emailEditText.requestFocus()
-                showErrorDialog("Email Already Exists", 
-                    "The email address you entered is already in use.\\n\\n" +
-                    "Please try with a different email address.")
+                showErrorDialog("Registration Failed", 
+                    "Please check if your email or phone number is duplicated. Please try again.")
             }
             
             // 用户名重复错误
@@ -392,9 +391,8 @@ class SignUpActivity : ComponentActivity() {
              errorMessage.contains("exists", ignoreCase = true)) -> {
                 usernameEditText.error = "This username is already taken"
                 usernameEditText.requestFocus()
-                showErrorDialog("Username Already Exists", 
-                    "The username you entered is already taken.\\n\\n" +
-                    "Please choose a different username.")
+                showErrorDialog("Registration Failed", 
+                    "Please check if your email or phone number is duplicated. Please try again.")
             }
             
             // 手机号重复错误
@@ -404,9 +402,8 @@ class SignUpActivity : ComponentActivity() {
              errorMessage.contains("exists", ignoreCase = true)) -> {
                 phoneEditText.error = "This phone number is already registered"
                 phoneEditText.requestFocus()
-                showErrorDialog("Phone Number Already Exists", 
-                    "The phone number you entered is already in use.\\n\\n" +
-                    "Please try with a different phone number.")
+                showErrorDialog("Registration Failed", 
+                    "Please check if your email or phone number is duplicated. Please try again.")
             }
             
             // 邮箱格式错误
@@ -446,9 +443,7 @@ class SignUpActivity : ComponentActivity() {
             // 其他服务器错误
             else -> {
                 showErrorDialog("Registration Failed", 
-                    "We're sorry, but your registration could not be completed.\\n\\n" +
-                    "Error: \$errorMessage\\n\\n" +
-                    "Please check your information and try again.")
+                    "Please check if your email or phone number is duplicated. Please try again.")
             }
         }
     }

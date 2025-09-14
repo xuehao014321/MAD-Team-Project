@@ -1,8 +1,11 @@
 package com.example.mad_gruop_ass
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.example.mad_gruop_ass.utils.NetworkUtils
+import com.example.mad_gruop_ass.utils.NetworkDiscovery
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
@@ -12,6 +15,8 @@ import java.io.IOException
 import java.lang.reflect.Type
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.net.HttpURLConnection
 import java.net.URL
 import org.json.JSONObject
@@ -19,13 +24,18 @@ import org.json.JSONObject
 object ApiClient {
     private const val TAG = "ApiClient"
 
-    // ✅ API Base URL - Use your NeighborLink API
-    private const val BASE_URL = "http://192.168.0.103:5000/api"
-
+    // ✅ API Base URL - 通过脚本自动更新
+    private const val BASE_URL = "http://192.168.0.103:5000/api"  // 自动更新
+    
     // ✅ HTTP Client
     private val client = OkHttpClient()
     private val gson = Gson()
     private val mainHandler = Handler(Looper.getMainLooper())
+    
+    /**
+     * 获取当前使用的API基础URL
+     */
+    fun getCurrentBaseUrl(): String = BASE_URL
 
     // ✅ User related callback interfaces
     interface UserCallback {
@@ -79,7 +89,7 @@ object ApiClient {
     // ✅ Get all users
     fun getAllUsers(callback: UsersListCallback) {
         val request = Request.Builder()
-            .url("$BASE_URL/users")
+                            .url("$BASE_URL/users")
             .get()
             .build()
 
@@ -257,7 +267,7 @@ object ApiClient {
     // ✅ Test API connection
     fun testConnection(callback: UpdateUserCallback) {
         val request = Request.Builder()
-            .url(BASE_URL.replace("/api", "") + "/api/test")
+                            .url(BASE_URL.replace("/api", "") + "/api/test")
             .get()
             .build()
 

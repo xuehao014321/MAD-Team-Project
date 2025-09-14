@@ -2,6 +2,7 @@ package com.example.mad_gruop_ass
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         
         userSessionManager = UserSessionManager(this)
+        
+
+        
         setupRecyclerView()
         setupFAB()
         setupProfileIcon()
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         setupLogoClick()
         loadData()
     }
+    
+
 
     override fun onResume() {
         super.onResume()
@@ -122,6 +128,8 @@ class MainActivity : AppCompatActivity() {
             refreshDataWithShuffle()
             Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show()
         }
+        
+
     }
     
     private fun loadData() {

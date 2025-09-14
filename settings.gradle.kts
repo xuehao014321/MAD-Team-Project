@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MAD_GRUOP_ASS"
+rootProject.name = "MAD_GROUP_ASS"
 include(":app")
  

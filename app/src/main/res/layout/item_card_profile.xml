@@ -68,7 +68,25 @@
                     android:letterSpacing="0.1"
                     android:background="@drawable/borrowed_label_background"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp" />
+                    android:paddingVertical="2dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- 返回可用按钮 -->
+                <TextView
+                    android:id="@+id/returnAvailableButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RETURN TO AVAILABLE"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/return_button_background"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:elevation="2dp" />
 
             </LinearLayout>
 

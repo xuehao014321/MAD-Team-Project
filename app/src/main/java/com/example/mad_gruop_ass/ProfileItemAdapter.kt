@@ -17,7 +17,8 @@ import java.io.File
 class ProfileItemAdapter(
     private val items: MutableList<Item>,
     private val onItemClick: (Item) -> Unit,
-    private val onDeleteClick: (Item, Int) -> Unit
+    private val onDeleteClick: (Item, Int) -> Unit,
+    private val onReturnAvailableClick: ((Item, Int) -> Unit)? = null
 ) : RecyclerView.Adapter<ProfileItemAdapter.ProfileItemViewHolder>() {
     
     // 存储每个item的点赞状态
@@ -38,6 +39,7 @@ class ProfileItemAdapter(
         val borrowedSealOverlay: View = itemView.findViewById(R.id.borrowedSealOverlay)
         val sealIcon: ImageView = itemView.findViewById(R.id.sealIcon)
         val sealText: TextView = itemView.findViewById(R.id.sealText)
+        val returnAvailableButton: TextView = itemView.findViewById(R.id.returnAvailableButton)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileItemViewHolder {
@@ -110,6 +112,11 @@ class ProfileItemAdapter(
         // 设置删除按钮点击事件
         holder.deleteButton.setOnClickListener {
             onDeleteClick(item, position)
+        }
+        
+        // 设置返回可用按钮点击事件
+        holder.returnAvailableButton.setOnClickListener {
+            onReturnAvailableClick?.invoke(item, position)
         }
     }
     
@@ -253,18 +260,21 @@ class ProfileItemAdapter(
     private fun updateSealEffect(holder: ProfileItemViewHolder, status: String) {
         when (status.lowercase()) {
             "borrowed" -> {
-                // 显示封印效果
+                // 显示封印效果和返回可用按钮
                 holder.borrowedSealOverlay.visibility = View.VISIBLE
                 holder.sealIcon.setImageResource(R.drawable.ic_lock)
                 holder.sealText.text = "BORROWED"
+                holder.returnAvailableButton.visibility = View.VISIBLE
             }
             "available", "lend" -> {
                 // 隐藏封印效果
                 holder.borrowedSealOverlay.visibility = View.GONE
+                holder.returnAvailableButton.visibility = View.GONE
             }
             else -> {
                 // 其他状态也隐藏封印效果
                 holder.borrowedSealOverlay.visibility = View.GONE
+                holder.returnAvailableButton.visibility = View.GONE
             }
         }
     }

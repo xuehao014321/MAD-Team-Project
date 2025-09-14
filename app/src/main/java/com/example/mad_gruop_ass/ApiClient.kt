@@ -799,4 +799,64 @@ object ApiClient {
             }
         })
     }
+
+    // ✅ Update item status (专门用于状态更新)
+    fun updateItemStatus(itemId: Int, newStatus: String, callback: ItemCallback) {
+        try {
+            Log.d(TAG, "Updating item status: itemId=$itemId, newStatus=$newStatus")
+            
+            // 创建状态更新的JSON数据
+            val updateData = JsonObject().apply {
+                addProperty("status", newStatus)
+            }
+            
+            val jsonString = gson.toJson(updateData)
+            Log.d(TAG, "Update status data: $jsonString")
+
+            val requestBody = RequestBody.create(
+                "application/json; charset=utf-8".toMediaTypeOrNull(),
+                jsonString
+            )
+
+            val request = Request.Builder()
+                .url("$BASE_URL/items/$itemId")
+                .patch(requestBody)
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e(TAG, "Failed to update item status", e)
+                    mainHandler.post { callback.onError("Network request failed: ${e.message}") }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        val responseBody = response.body?.string() ?: ""
+                        Log.d(TAG, "Update status response: $responseBody")
+
+                        if (response.isSuccessful) {
+                            // 解析更新后的物品数据
+                            val updatedItem = gson.fromJson(responseBody, Item::class.java)
+                            mainHandler.post { callback.onSuccess(updatedItem) }
+                        } else {
+                            val errorMessage = try {
+                                val errorResponse = gson.fromJson(responseBody, JsonObject::class.java)
+                                errorResponse.get("error")?.asString ?: "Status update failed"
+                            } catch (e: Exception) {
+                                "Status update failed: ${response.code}"
+                            }
+                            mainHandler.post { callback.onError(errorMessage) }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to parse status update response", e)
+                        mainHandler.post { callback.onError("Response parsing failed: ${e.message}") }
+                    }
+                }
+            })
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create status update request", e)
+            mainHandler.post { callback.onError("Request creation failed: ${e.message}") }
+        }
+    }
 }

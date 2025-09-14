@@ -160,6 +160,10 @@ class MyProfileActivity : AppCompatActivity() {
                     onDeleteClick = { item, position ->
                         // Handle delete click
                         showDeleteConfirmation(item, position)
+                    },
+                    onReturnAvailableClick = { item, position ->
+                        // Handle return to available click
+                        showReturnAvailableConfirmation(item, position)
                     }
                 )
                 recyclerView.adapter = itemAdapter
@@ -651,6 +655,56 @@ class MyProfileActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e(TAG, "Error showing delete confirmation: ${e.message}")
             showToast("Error showing confirmation dialog")
+        }
+    }
+    
+    private fun showReturnAvailableConfirmation(item: Item, position: Int) {
+        try {
+            AlertDialog.Builder(this)
+                .setTitle("Return to Available")
+                .setMessage("Are you sure you want to return '${item.title}' to available status? This will make it available for borrowing again.")
+                .setPositiveButton("Return") { _, _ ->
+                    returnItemToAvailable(item, position)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error showing return confirmation: ${e.message}")
+            showToast("Error showing confirmation dialog")
+        }
+    }
+    
+    private fun returnItemToAvailable(item: Item, position: Int) {
+        try {
+            // Show loading state
+            showToast("Updating item status...")
+            
+            // Call API to update item status to Available
+            ApiClient.updateItemStatus(item.itemId, "Available", object : ApiClient.ItemCallback {
+                override fun onSuccess(updatedItem: Item) {
+                    runOnUiThread {
+                        // Update item in list
+                        if (position >= 0 && position < itemList.size) {
+                            itemList[position].status = "Available"
+                            itemAdapter.notifyItemChanged(position)
+                        }
+                        
+                        showToast("Item returned to available successfully")
+                        Log.d(TAG, "Successfully updated item status: ${item.title}")
+                    }
+                }
+                
+                override fun onError(error: String) {
+                    runOnUiThread {
+                        showToast("Failed to update item status: $error")
+                        Log.e(TAG, "Failed to update item status: $error")
+                    }
+                }
+            })
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error returning item to available: ${e.message}")
+            showToast("Error updating item status")
         }
     }
     

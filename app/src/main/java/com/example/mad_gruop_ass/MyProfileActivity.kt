@@ -9,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.core.graphics.Insets
@@ -44,7 +45,7 @@ class MyProfileActivity : AppCompatActivity() {
     private var creditPoints: Int = 0
     
     // RecyclerView相关变量
-    private lateinit var itemAdapter: ItemAdapter
+    private lateinit var itemAdapter: ProfileItemAdapter
     private val itemList = mutableListOf<Item>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +75,12 @@ class MyProfileActivity : AppCompatActivity() {
         if (currentUser.isEmpty()) {
             currentUser = userSessionManager.getUsername() ?: "Username"
             Log.d(TAG, "Using session username: '$currentUser'")
+        }
+        
+        // If no userId from intent, try to get from session
+        if (userId <= 0) {
+            userId = userSessionManager.getUserId()
+            Log.d(TAG, "Using session userId: $userId")
         }
 
         // Set system bars padding
@@ -121,33 +128,40 @@ class MyProfileActivity : AppCompatActivity() {
                 layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
                 recyclerView.layoutManager = layoutManager
                 
-                itemAdapter = ItemAdapter(itemList) { item ->
-                    // Handle item click - navigate to detail page
-                    val intent = Intent(this@MyProfileActivity, ItemDetailActivity::class.java)
-                    intent.putExtra("itemId", item.itemId)
-                    intent.putExtra("itemTitle", item.title)
-                    intent.putExtra("itemDescription", item.description)
-                    intent.putExtra("itemImageUrl", item.imageUrl)
-                    intent.putExtra("itemStatus", item.status)
-                    intent.putExtra("itemLikes", item.likes)
-                    val distanceText = when {
-                        item.distance <= 0 -> "0 km"
-                        item.distance < 1 -> "${(item.distance * 1000).toInt()}m"
-                        else -> "${String.format("%.1f", item.distance)} km"
+                itemAdapter = ProfileItemAdapter(
+                    itemList,
+                    onItemClick = { item ->
+                        // Handle item click - navigate to detail page
+                        val intent = Intent(this@MyProfileActivity, ItemDetailActivity::class.java)
+                        intent.putExtra("itemId", item.itemId)
+                        intent.putExtra("itemTitle", item.title)
+                        intent.putExtra("itemDescription", item.description)
+                        intent.putExtra("itemImageUrl", item.imageUrl)
+                        intent.putExtra("itemStatus", item.status)
+                        intent.putExtra("itemLikes", item.likes)
+                        val distanceText = when {
+                            item.distance <= 0 -> "0 km"
+                            item.distance < 1 -> "${(item.distance * 1000).toInt()}m"
+                            else -> "${String.format("%.1f", item.distance)} km"
+                        }
+                        intent.putExtra("itemDistance", distanceText)
+                        intent.putExtra("itemCreatedAt", item.createdAt)
+                        val username = when {
+                            item.username.isNotEmpty() -> item.username
+                            item.ownerName.isNotEmpty() -> item.ownerName
+                            item.userName.isNotEmpty() -> item.userName
+                            item.owner.isNotEmpty() -> item.owner
+                            else -> "User ${item.userId}"
+                        }
+                        intent.putExtra("itemUsername", username)
+                        intent.putExtra("itemUserId", item.userId)
+                        startActivity(intent)
+                    },
+                    onDeleteClick = { item, position ->
+                        // Handle delete click
+                        showDeleteConfirmation(item, position)
                     }
-                    intent.putExtra("itemDistance", distanceText)
-                    intent.putExtra("itemCreatedAt", item.createdAt)
-                    val username = when {
-                        item.username.isNotEmpty() -> item.username
-                        item.ownerName.isNotEmpty() -> item.ownerName
-                        item.userName.isNotEmpty() -> item.userName
-                        item.owner.isNotEmpty() -> item.owner
-                        else -> "User ${item.userId}"
-                    }
-                    intent.putExtra("itemUsername", username)
-                    intent.putExtra("itemUserId", item.userId) // 添加用户ID
-                    startActivity(intent)
-                }
+                )
                 recyclerView.adapter = itemAdapter
                 
                 val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing_small)
@@ -179,59 +193,44 @@ class MyProfileActivity : AppCompatActivity() {
      * Load user data from API including gender, email, and other profile info
      */
     private fun loadUserDataFromAPI() {
-        if (currentUser.isNotEmpty()) {
-            ApiClient.getUserByUsername(currentUser, object : ApiClient.UserCallback {
+        // Try to load user data by userId first, then by username as fallback
+        if (userId > 0) {
+            Log.d(TAG, "Loading user data from API by userId: $userId")
+            ApiClient.getUserById(userId, object : ApiClient.UserCallback {
                 override fun onSuccess(user: User) {
                     runOnUiThread {
-                        try {
-                            // Update user email
-                            if (user.email.isNotEmpty()) {
-                                userEmail?.text = user.email
-                                Log.d(TAG, " Loaded user email: ${user.email}")
-                            } else {
-                                userEmail?.text = userSessionManager.getEmail() ?: "user@example.com"
-                            }
-
-                            // Update user gender - this is what was missing!
-                            if (user.gender.isNotEmpty()) {
-                                userGender?.text = user.gender
-                                Log.d(TAG, " Loaded user gender: ${user.gender}")
-                            } else {
-                                userGender?.text = "Not specified"
-                                Log.d(TAG, "No gender data found for user: $currentUser")
-                            }
-
-                            // Update credit rating based on credit points
-                            val rating = calculateRatingFromCredit(creditPoints)
-                            creditRating?.rating = rating
-                            creditPointsTextView?.text = "$creditPoints points"
-                            
-                            // Load actual credit data from API
-                            loadCreditDataFromAPI()
-
-                            // Load user avatar with the user's avatar URL
-                            updateUserAvatarFromAPI(user)
-
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error updating UI with user data: ${e.message}")
-                        }
+                        handleUserDataSuccess(user)
                     }
                 }
 
                 override fun onError(error: String) {
-                    Log.e(TAG, " Failed to load user data from API: $error")
+                    Log.e(TAG, "Failed to load user data by userId: $error")
+                    // Fallback to username lookup
+                    loadUserDataByUsername()
+                }
+            })
+        } else if (currentUser.isNotEmpty()) {
+            loadUserDataByUsername()
+        } else {
+            Log.w(TAG, "No user identifier available to load user data")
+            setFallbackUserData()
+        }
+    }
+    
+    private fun loadUserDataByUsername() {
+        if (currentUser.isNotEmpty()) {
+            Log.d(TAG, "Loading user data from API by username: $currentUser")
+            ApiClient.getUserByUsername(currentUser, object : ApiClient.UserCallback {
+                override fun onSuccess(user: User) {
                     runOnUiThread {
-                        // Set fallback data
-                        userEmail?.text = userSessionManager.getEmail() ?: "user@example.com"
-                        userGender?.text = "Not specified"
-                        creditRating?.rating = 4.0f
-                        creditPointsTextView?.text = "$creditPoints points"
-                        
-                        // Still try to load credit data from API
-                        loadCreditDataFromAPI()
-                        
-                        // Still try to load avatar from session
-                        updateUserAvatar()
+                        handleUserDataSuccess(user)
+                    }
+                }
+
+                override fun onError(error: String) {
+                    Log.e(TAG, "Failed to load user data by username: $error")
+                    runOnUiThread {
+                        setFallbackUserData()
                     }
                 }
             })
@@ -636,4 +635,109 @@ class MyProfileActivity : AppCompatActivity() {
     private fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
         Toast.makeText(this, message, duration).show()
     }
+    
+    private fun showDeleteConfirmation(item: Item, position: Int) {
+        try {
+            AlertDialog.Builder(this)
+                .setTitle("Delete Item")
+                .setMessage("Are you sure you want to delete '${item.title}'? This action cannot be undone.")
+                .setPositiveButton("Delete") { _, _ ->
+                    deleteItem(item, position)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error showing delete confirmation: ${e.message}")
+            showToast("Error showing confirmation dialog")
+        }
+    }
+    
+    private fun deleteItem(item: Item, position: Int) {
+        try {
+            // Show loading state
+            showToast("Deleting item...")
+            
+            // Call API to delete item
+            ApiClient.deleteItem(item.itemId, object : ApiClient.ItemCallback {
+                override fun onSuccess(deletedItem: Item) {
+                    runOnUiThread {
+                        // Remove item from list and update UI
+                        itemAdapter.removeItem(position)
+                        
+                        // Update credit points (subtract points for deleted item)
+                        creditPoints = maxOf(50, creditPoints - 10) // Minimum 50 points
+                        updateCreditDisplay(creditPoints, itemList.size)
+                        
+                        showToast("Item deleted successfully")
+                        
+                        Log.d(TAG, "Successfully deleted item: ${item.title}")
+                    }
+                }
+                
+                override fun onError(error: String) {
+                    runOnUiThread {
+                        showToast("Failed to delete item: $error")
+                        Log.e(TAG, "Failed to delete item: $error")
+                    }
+                }
+            })
+            
+                 } catch (e: Exception) {
+             Log.e(TAG, "Error deleting item: ${e.message}")
+             showToast("Error deleting item")
+         }
+     }
+     
+     private fun handleUserDataSuccess(user: User) {
+         try {
+             // Update user email
+             if (user.email.isNotEmpty()) {
+                 userEmail?.text = user.email
+                 Log.d(TAG, "Loaded user email: ${user.email}")
+             } else {
+                 userEmail?.text = userSessionManager.getEmail() ?: "user@example.com"
+             }
+
+             // Update user gender
+             if (user.gender.isNotEmpty()) {
+                 userGender?.text = user.gender
+                 Log.d(TAG, "Loaded user gender: ${user.gender}")
+             } else {
+                 userGender?.text = "Not specified"
+                 Log.d(TAG, "No gender data found for user: $currentUser")
+             }
+
+             // Update credit rating based on credit points
+             val rating = calculateRatingFromCredit(creditPoints)
+             creditRating?.rating = rating
+             creditPointsTextView?.text = "$creditPoints points"
+             
+             // Load actual credit data from API
+             loadCreditDataFromAPI()
+
+             // Load user avatar with the user's avatar URL
+             updateUserAvatarFromAPI(user)
+
+         } catch (e: Exception) {
+             Log.e(TAG, "Error updating UI with user data: ${e.message}")
+         }
+     }
+     
+     private fun setFallbackUserData() {
+         try {
+             // Set fallback data
+             userEmail?.text = userSessionManager.getEmail() ?: "user@example.com"
+             userGender?.text = "Not specified"
+             creditRating?.rating = 4.0f
+             creditPointsTextView?.text = "$creditPoints points"
+             
+             // Still try to load credit data from API
+             loadCreditDataFromAPI()
+             
+             // Still try to load avatar from session
+             updateUserAvatar()
+         } catch (e: Exception) {
+             Log.e(TAG, "Error setting fallback user data: ${e.message}")
+         }
+     }
 }

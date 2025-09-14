@@ -20,7 +20,7 @@ object ApiClient {
     private const val TAG = "ApiClient"
 
     // ✅ API Base URL - Use your NeighborLink API
-    private const val BASE_URL = "http://192.168.0.104:5000/api"
+    private const val BASE_URL = "http://192.168.0.103:5000/api"
 
     // ✅ HTTP Client
     private val client = OkHttpClient()
@@ -652,6 +652,60 @@ object ApiClient {
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create update request", e)
+            mainHandler.post { callback.onError("Request creation failed: ${e.message}") }
+        }
+    }
+
+    // ✅ Delete item by ID
+    fun deleteItem(itemId: Int, callback: ItemCallback) {
+        try {
+            val request = Request.Builder()
+                .url("$BASE_URL/items/$itemId")
+                .delete()
+                .build()
+
+            Log.d(TAG, "Deleting item with ID: $itemId")
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e(TAG, "Failed to delete item", e)
+                    mainHandler.post { callback.onError("Network request failed: ${e.message}") }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    try {
+                        val responseBody = response.body?.string() ?: ""
+                        Log.d(TAG, "Delete item response: $responseBody")
+
+                        if (response.isSuccessful) {
+                            // Create a dummy item to represent successful deletion
+                            val deletedItem = Item().apply {
+                                this.itemId = itemId
+                                this.status = "Deleted"
+                            }
+                            mainHandler.post { callback.onSuccess(deletedItem) }
+                        } else {
+                            val errorMessage = if (responseBody.isNotEmpty()) {
+                                try {
+                                    val errorResponse = gson.fromJson(responseBody, JsonObject::class.java)
+                                    errorResponse.get("error")?.asString ?: "Delete failed"
+                                } catch (e: Exception) {
+                                    "Delete failed: ${response.code}"
+                                }
+                            } else {
+                                "Delete failed: ${response.code}"
+                            }
+                            mainHandler.post { callback.onError(errorMessage) }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to parse delete response", e)
+                        mainHandler.post { callback.onError("Response parsing failed: ${e.message}") }
+                    }
+                }
+            })
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create delete request", e)
             mainHandler.post { callback.onError("Request creation failed: ${e.message}") }
         }
     }

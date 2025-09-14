@@ -51,16 +51,22 @@ class MainActivity : AppCompatActivity() {
         itemAdapter = ItemAdapter(itemList) { item ->
             // Handle item click - navigate to detail page
             val intent = Intent(this@MainActivity, ItemDetailActivity::class.java)
-            intent.putExtra("itemId", item.itemId)  // ����itemId
+            intent.putExtra("itemId", item.itemId)  //itemId
             intent.putExtra("itemTitle", item.title)
             intent.putExtra("itemDescription", item.description)
             intent.putExtra("itemImageUrl", item.imageUrl)
             intent.putExtra("itemStatus", item.status)
             intent.putExtra("itemLikes", item.likes)
-            intent.putExtra("itemDistance", item.distance)
+            // 修复距离处理 - 将 Double 转换为格式化的字符串
+            val distanceText = when {
+                item.distance <= 0 -> "0 km"
+                item.distance < 1 -> "${(item.distance * 1000).toInt()}m"
+                else -> "${String.format("%.1f", item.distance)} km"
+            }
+            intent.putExtra("itemDistance", distanceText)
             intent.putExtra("itemCreatedAt", item.createdAt)
             intent.putExtra("itemUsername", item.username)
-            intent.putExtra("itemUserId", item.userId) // �����û�ID
+            intent.putExtra("itemUserId", item.userId) // ûID
             startActivity(intent)
         }
         recyclerView.adapter = itemAdapter

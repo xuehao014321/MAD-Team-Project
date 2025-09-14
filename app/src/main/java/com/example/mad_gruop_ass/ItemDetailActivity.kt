@@ -77,7 +77,7 @@ class ItemDetailActivity : AppCompatActivity() {
                 startActivity(intent)
                 Log.d("ItemDetailActivity", "Navigating to UserProfileActivity with username: $itemUsername")
             } else {
-                Toast.makeText(this, "用户信息不可用", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "User information unavailable", Toast.LENGTH_SHORT).show()
                 Log.w("ItemDetailActivity", "Both userId and username are empty, cannot navigate to user profile")
             }
         }

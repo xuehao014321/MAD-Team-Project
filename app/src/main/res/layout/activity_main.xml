@@ -25,7 +25,10 @@
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:scaleType="fitCenter"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless" />
 
         <!-- 用户头像图标 - 登录前显示默认用户图标，登录成功后切换为用户头像，点击进入用户信息页面 -->
         <ImageView
@@ -42,8 +45,6 @@
     </RelativeLayout>
 
     <!-- Main Content -->
-
-    <!-- Bottom Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -53,17 +54,25 @@
             android:layout_width="match_parent"
             android:layout_height="64dp" />
 
-        <!-- 商品卡片列表 - 显示所有商品卡片，每个卡片可点击查看详情 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <!-- 下拉刷新包装器 -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="8dp"
-            android:paddingBottom="50dp"
-            android:scrollbars="none" />
+            android:paddingBottom="50dp">
+
+            <!-- 商品卡片列表 - 显示所有商品卡片，每个卡片可点击查看详情 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="8dp"
+                android:scrollbars="none" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

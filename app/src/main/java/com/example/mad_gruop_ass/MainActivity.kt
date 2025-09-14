@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.mad_gruop_ass.utils.UserSessionManager
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private val itemList = mutableListOf<Item>()
     private lateinit var fabAdd: ImageView
     private lateinit var profileIcon: ImageView
+    private lateinit var appLogo: ImageView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var userSessionManager: UserSessionManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +34,16 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         setupFAB()
         setupProfileIcon()
+        setupSwipeRefresh()
+        setupLogoClick()
         loadData()
     }
 
     override fun onResume() {
         super.onResume()
-        // ˢ���û�ͷ�񣨿��ܸոյ�¼��
+        // 刷新用户头像（可能刚登录）
         updateProfileIcon()
-        // ������ҳʱˢ�£���֤����ͬ��
+        // 返回页面时刷新，确保数据同步
         refreshData()
     }
     
@@ -86,71 +92,90 @@ class MainActivity : AppCompatActivity() {
     private fun setupProfileIcon() {
         profileIcon = findViewById(R.id.profileIcon)
         profileIcon.setOnClickListener {
-            // ����ѵ�¼����ת���û�����ҳ�棻���δ��¼����ת����¼ҳ��
             if (userSessionManager.isLoggedIn()) {
                 val intent = Intent(this, MyProfileActivity::class.java)
-                // �����û���Ϣ����������ҳ��
-                intent.putExtra("username", userSessionManager.getUsername())
-                intent.putExtra("user_id", userSessionManager.getUserId())
-                intent.putExtra("email", userSessionManager.getEmail())
-                intent.putExtra("gender", userSessionManager.getGender())
-                // Note: Credit will be calculated in MyProfileActivity from API
                 startActivity(intent)
             } else {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
         }
-        
-        // �����û�ͷ��
-        updateProfileIcon()
     }
     
-    private fun updateProfileIcon() {
-        if (userSessionManager.isLoggedIn()) {
-            val avatarUrl = userSessionManager.getAvatarUrl()
-            if (!avatarUrl.isNullOrEmpty()) {
-                // �����û�ͷ��
-                Glide.with(this)
-                    .load(avatarUrl)
-                    .placeholder(R.drawable.ic_user_circle)
-                    .error(R.drawable.ic_user_circle)
-                    .transform(CircleCrop())
-                    .into(profileIcon)
-            } else {
-                // ʹ��Ĭ��ͷ��
-                profileIcon.setImageResource(R.drawable.ic_user_circle)
-            }
-        } else {
-            // ʹ��Ĭ��ͷ��
-            profileIcon.setImageResource(R.drawable.ic_user_circle)
+    private fun setupSwipeRefresh() {
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setColorSchemeResources(
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light
+        )
+        
+        swipeRefreshLayout.setOnRefreshListener {
+            refreshDataWithShuffle()
+        }
+    }
+    
+    private fun setupLogoClick() {
+        appLogo = findViewById(R.id.appLogo)
+        appLogo.setOnClickListener {
+            refreshDataWithShuffle()
+            Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show()
         }
     }
     
     private fun loadData() {
-        // ʹ�� ApiClient �Ļص���ʽ��������
+        // 使用 ApiClient 的回调方式加载数据
         ApiClient.getAllItems(object : ApiClient.ItemsListCallback {
             override fun onSuccess(items: List<Item>) {
                 lifecycleScope.launch {
                     itemList.clear()
                     itemList.addAll(items)
                     itemAdapter.notifyDataSetChanged()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
 
             override fun onError(error: String) {
                 lifecycleScope.launch {
-                    Toast.makeText(this@MainActivity, "��������ʧ��: $error", Toast.LENGTH_SHORT).show()
-                    // ���APIʧ�ܣ����ر�������
+                    Toast.makeText(this@MainActivity, "Failed to load data: $error", Toast.LENGTH_SHORT).show()
+                    // 如果API失败，加载备用数据
                     loadFallbackData()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         })
     }
 
     private fun refreshData() {
-        // ˢ�����ݣ�ֱ�ӵ���loadData
+        // 刷新数据，直接调用loadData
         loadData()
+    }
+    
+    private fun refreshDataWithShuffle() {
+        // 刷新数据并打乱排序
+        ApiClient.getAllItems(object : ApiClient.ItemsListCallback {
+            override fun onSuccess(items: List<Item>) {
+                lifecycleScope.launch {
+                    itemList.clear()
+                    // 打乱排序
+                    val shuffledItems = items.shuffled()
+                    itemList.addAll(shuffledItems)
+                    itemAdapter.notifyDataSetChanged()
+                    swipeRefreshLayout.isRefreshing = false
+                    Toast.makeText(this@MainActivity, "Refresh completed!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onError(error: String) {
+                lifecycleScope.launch {
+                    Toast.makeText(this@MainActivity, "Refresh failed: $error", Toast.LENGTH_SHORT).show()
+                    // 如果API失败，加载备用数据并打乱
+                    loadFallbackDataWithShuffle()
+                    swipeRefreshLayout.isRefreshing = false
+                }
+            }
+        })
     }
     
     private fun loadFallbackData() {
@@ -197,5 +222,84 @@ class MainActivity : AppCompatActivity() {
         )
         itemList.addAll(fallbackItems)
         itemAdapter.notifyDataSetChanged()
+    }
+    
+    private fun loadFallbackDataWithShuffle() {
+        val fallbackItems = listOf(
+            Item().apply {
+                itemId = 1
+                userId = 1
+                title = "Basketball"
+                description = "Professional basketball, suitable for indoor and outdoor use"
+                setPriceString("50")
+                imageUrl = "https://picsum.photos/200?1"
+                status = "Available"
+                views = 120
+                likes = 15
+                createdAt = "2025-09-02 09:00:00"
+                username = "Test User 1"
+            },
+            Item().apply {
+                itemId = 2
+                userId = 2
+                title = "Guitar"
+                description = "Classical guitar with beautiful sound quality"
+                setPriceString("200")
+                imageUrl = "https://picsum.photos/200?2"
+                status = "Available"
+                views = 85
+                likes = 23
+                createdAt = "2025-09-02 10:30:00"
+                username = "Test User 2"
+            },
+            Item().apply {
+                itemId = 3
+                userId = 3
+                title = "Treadmill"
+                description = "Home treadmill with complete functions"
+                setPriceString("800")
+                imageUrl = "https://picsum.photos/200?3"
+                status = "Available"
+                views = 200
+                likes = 45
+                createdAt = "2025-09-02 11:15:00"
+                username = "Test User 3"
+            }
+        )
+        itemList.clear()
+        // 打乱备用数据的排序
+        val shuffledItems = fallbackItems.shuffled()
+        itemList.addAll(shuffledItems)
+        itemAdapter.notifyDataSetChanged()
+    }
+    
+    private fun updateProfileIcon() {
+        if (userSessionManager.isLoggedIn()) {
+            val userId = userSessionManager.getUserId()
+            ApiClient.getUserById(userId, object : ApiClient.UserCallback {
+                override fun onSuccess(user: User) {
+                    runOnUiThread {
+                        if (!user.avatarUrl.isNullOrEmpty()) {
+                            Glide.with(this@MainActivity)
+                                .load(user.avatarUrl)
+                                .transform(CircleCrop())
+                                .placeholder(R.drawable.ic_user_circle)
+                                .error(R.drawable.ic_user_circle)
+                                .into(profileIcon)
+                        } else {
+                            profileIcon.setImageResource(R.drawable.ic_user_circle)
+                        }
+                    }
+                }
+
+                override fun onError(error: String) {
+                    runOnUiThread {
+                        profileIcon.setImageResource(R.drawable.ic_user_circle)
+                    }
+                }
+            })
+        } else {
+            profileIcon.setImageResource(R.drawable.ic_user_circle)
+        }
     }
 }

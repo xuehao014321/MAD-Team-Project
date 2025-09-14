@@ -70,7 +70,7 @@ class UserProfileActivity : AppCompatActivity() {
 
         // 如果既没有用户名也没有用户ID，显示错误并返回
         if (targetUsername.isEmpty() && targetUserId <= 0) {
-            Toast.makeText(this, "用户信息无效", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Invalid user information", Toast.LENGTH_SHORT).show()
             finish()
             return
         }

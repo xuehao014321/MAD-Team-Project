@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Original colors -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- NeighborLink Theme Colors -->
+    <color name="primary_green">#4CAF50</color>
+    <color name="primary_green_dark">#388E3C</color>
+    <color name="accent_green">#81C784</color>
+    
+    <!-- Background Colors -->
+    <color name="background_color">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="image_placeholder">#F5F5F5</color>
+    
+    <!-- Text Colors -->
+    <color name="primary_text_color">#333333</color>
+    <color name="secondary_text_color">#666666</color>
+    <color name="price_color">#666666</color>
+    
+    <!-- UI Colors -->
+    <color name="divider_color">#F0F0F0</color>
+    <color name="shadow_color">#10000000</color>
+    
+    <!-- MAD项目颜色 -->
+    <color name="gray_button">#FF666666</color>
+    <color name="gray_light">#FFE8E8E8</color>
+    <color name="hint_color">#FF999999</color>
+    
+    <!-- NeighborLink Logo 配色方案 -->
+    <color name="neighborlink_dark_teal">#FF2D5A5A</color>
+    <color name="neighborlink_bright_green">#FF4CAF50</color>
+    <color name="neighborlink_text_gray">#FF5A7A7A</color>
+    <color name="neighborlink_background">#FF1A1A1A</color>
+    <color name="neighborlink_light_teal">#FF4A8B8B</color>
+    
+    <!-- Status Colors -->
+    <color name="success_color">#4CAF50</color>
+    <color name="warning_color">#FF9800</color>
+    <color name="error_color">#F44336</color>
+    
+    <!-- Navigation Colors -->
+    <color name="nav_active">#1E3A8A</color>
+    <color name="nav_inactive">#9CA3AF</color>
+    
+    <!-- Transparent Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+    
+    <!-- ����ҳ����ɫ���ϲ���������Ŀ�� -->
+    <color name="text_primary">#FF212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="image_background">#FFE0E0E0</color>
+    <color name="liked_color">#FF4CAF50</color>
+    <color name="default_button_color">#FFE0E0E0</color>
+    <color name="primary_color">#FF2196F3</color>
+    <color name="button_background">#FFF0F0F0</color>
+    <color name="button_disabled">#FFBDBDBD</color>
+    <color name="text_disabled">#FF9E9E9E</color>
+</resources>

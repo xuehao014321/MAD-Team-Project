@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing -->
+    <dimen name="item_spacing">8dp</dimen>
+    <dimen name="item_spacing_small">4dp</dimen>
+    <dimen name="card_margin">2dp</dimen>
+    <dimen name="card_padding">8dp</dimen>
+    <dimen name="content_padding">16dp</dimen>
+    
+    <!-- Card dimensions -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="item_image_height">140dp</dimen>
+    
+    <!-- Text sizes -->
+    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_tiny">11sp</dimen>
+    
+    <!-- Icon sizes -->
+    <dimen name="icon_size_large">36dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_tiny">18dp</dimen>
+    
+    <!-- ÏêÇéÒ³Ãæ³ß´ç -->
+    <dimen name="detail_image_height">300dp</dimen>
+    <dimen name="detail_button_height">48dp</dimen>
+    <dimen name="detail_text_margin">16dp</dimen>
+    <dimen name="detail_section_margin">24dp</dimen>
+    <dimen name="detail_button_margin">8dp</dimen>
+    <dimen name="detail_avatar_size">40dp</dimen>
+    <dimen name="detail_status_padding">8dp</dimen>
+    <dimen name="detail_navbar_height">56dp</dimen>
+</resources> 

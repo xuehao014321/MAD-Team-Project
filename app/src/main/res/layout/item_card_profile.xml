@@ -29,6 +29,51 @@
             android:src="@drawable/default_image"
             android:contentDescription="Item Image" />
 
+        <!-- 借出封印遮罩层 - 默认隐藏 -->
+        <RelativeLayout
+            android:id="@+id/borrowedSealOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:background="#80000000"
+            android:visibility="gone"
+            android:clickable="false">
+
+            <!-- 封印标签 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <!-- 封印图标 -->
+                <ImageView
+                    android:id="@+id/sealIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_lock"
+                    android:tint="@color/white"
+                    android:layout_marginBottom="4dp"
+                    android:contentDescription="Borrowed Lock Icon" />
+
+                <!-- BORROWED 文字 -->
+                <TextView
+                    android:id="@+id/sealText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BORROWED"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"
+                    android:background="@drawable/borrowed_label_background"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
         <!-- 删除按钮 - 位于右上角 -->
         <ImageView
             android:id="@+id/deleteButton"

@@ -63,6 +63,10 @@ class ItemAdapter(
         val ownerText: TextView = itemView.findViewById(R.id.ownerText)
         val likesText: TextView = itemView.findViewById(R.id.likesText)
         val likeIcon: ImageView = itemView.findViewById(R.id.likeIcon)
+        // 封印层相关视图
+        val borrowedSealOverlay: View = itemView.findViewById(R.id.borrowedSealOverlay)
+        val sealIcon: ImageView = itemView.findViewById(R.id.sealIcon)
+        val sealText: TextView = itemView.findViewById(R.id.sealText)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -144,6 +148,9 @@ class ItemAdapter(
                 updateLikeUI(holder, (item.isLiked == 1), item.likes)
             }
         }
+        
+        // 根据status控制封印效果
+        updateSealEffect(holder, item.status)
         
         // 设置卡片点击事件
         holder.cardView.setOnClickListener {
@@ -291,5 +298,27 @@ class ItemAdapter(
                 android.util.Log.e("ItemAdapter", "Error updating likes on server", e)
             }
         }.start()
+    }
+    
+    /**
+     * 根据物品状态控制封印效果
+     */
+    private fun updateSealEffect(holder: ItemViewHolder, status: String) {
+        when (status.lowercase()) {
+            "borrowed" -> {
+                // 显示封印效果
+                holder.borrowedSealOverlay.visibility = View.VISIBLE
+                holder.sealIcon.setImageResource(R.drawable.ic_lock)
+                holder.sealText.text = "BORROWED"
+            }
+            "available", "lend" -> {
+                // 隐藏封印效果
+                holder.borrowedSealOverlay.visibility = View.GONE
+            }
+            else -> {
+                // 其他状态也隐藏封印效果
+                holder.borrowedSealOverlay.visibility = View.GONE
+            }
+        }
     }
 }
